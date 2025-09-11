@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<PackageId>ChargerAstronomyShared</PackageId>
+	<Version>0.1.0</Version>
+	<Authors>UAH Stargazer</Authors>
+	<Description>Contracts and Domain for Charger Astronomy Project</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Domain\Common\" />
+  </ItemGroup>
+
+</Project>
