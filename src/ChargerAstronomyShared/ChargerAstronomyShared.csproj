@@ -8,10 +8,13 @@
 	<Version>0.1.0</Version>
 	<Authors>UAH Stargazer</Authors>
 	<Description>Contracts and Domain for Charger Astronomy Project</Description>
+	<RootNamespace>ChargerAstronomyShared</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\Common\" />
+    <Compile Remove="src\**" />
+    <EmbeddedResource Remove="src\**" />
+    <None Remove="src\**" />
   </ItemGroup>
 
 </Project>

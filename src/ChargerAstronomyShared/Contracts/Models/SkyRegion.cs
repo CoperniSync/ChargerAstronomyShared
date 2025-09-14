@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 
-namespace ChargerAstronomyShared.Contracts.ContractsModels
+namespace ChargerAstronomyShared.Contracts.Models
 {
     public sealed class SkyRegion
     {
@@ -35,8 +35,8 @@ namespace ChargerAstronomyShared.Contracts.ContractsModels
 
             RaMinHours = raMinHours;
             RaMaxHours = raMaxHours;
-            DecMinDeg  = decMinDeg;
-            DecMaxDeg  = decMaxDeg;
+            DecMinDeg = decMinDeg;
+            DecMaxDeg = decMaxDeg;
         }
     }
 }

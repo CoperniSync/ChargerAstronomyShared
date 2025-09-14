@@ -5,7 +5,7 @@ using System.Text;
 namespace ChargerAstronomyShared.Domain.Equatorial
 {
     //using ChargerAstronomyShared.Domain.Common;
-    
+
     public sealed class EquatorialStar : EquatorialCelestialBody
     {
         /// <summary>

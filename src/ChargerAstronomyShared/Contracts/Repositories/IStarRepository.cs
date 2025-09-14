@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ChargerAstronomyShared.Contracts.Models;
 using System.Threading.Tasks;
 
 namespace ChargerAstronomyShared.Contracts.Repositories
 {
-    using ChargerAstronomyShared.Contracts.ContractsModels;
+    using ChargerAstronomyShared.Contracts.Models;
     using ChargerAstronomyShared.Domain.Equatorial;
 
     public interface IStarRepository
@@ -16,7 +15,7 @@ namespace ChargerAstronomyShared.Contracts.Repositories
         Task<PageResult<EquatorialStar>> GetAllAsync(PageRequest page);
 
         Task<PageResult<EquatorialStar>> QueryBySkyRegionAsync(SkyRegion skyRegion, PageRequest page);
-        
+
         // Possibly query by icosphere region
         // Possibly query by proper name
         // Maybe add some filtering capabilities
