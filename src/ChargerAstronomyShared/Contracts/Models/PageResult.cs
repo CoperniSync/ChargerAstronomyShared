@@ -10,15 +10,17 @@ namespace ChargerAstronomyShared.Contracts.Models
 
         public int Total { get; }
 
-        public int Page { get; }
+        public int Skip { get; }
 
-        public int Size { get; }
+        public int Take { get; }
 
-        public bool HasNext => Page * Size < Total;
+        public bool HasNext => Skip + Items.Count < Total;
 
-        public PageResult(IReadOnlyList<T> items, int total, int page, int size)
+        public PageResult(IReadOnlyList<T> items, int total, int skip, int take)
         {
-            Items = items; Total = total; Page = page; Size = size; 
+            Items = items; Total = total; Skip = skip; Take = take; 
         }
+
+        public PageRequest NextRequest() => new PageRequest(Skip + Items.Count, Take);
     }
 }

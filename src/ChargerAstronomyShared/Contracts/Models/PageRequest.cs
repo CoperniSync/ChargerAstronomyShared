@@ -17,5 +17,6 @@ namespace ChargerAstronomyShared.Contracts.Models
             Skip = skip < 0 ? 0 : skip;
             Take = take < 0 ? 0 : take;
         }
+
     }
 }
