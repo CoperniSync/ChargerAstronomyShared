@@ -17,6 +17,8 @@ namespace ChargerAstronomyShared.Contracts.Streaming
 
         bool TryDequeue(out T item);
 
+        void EnqueueBlocking(T item, System.Threading.CancellationToken ct); 
+
         void Complete();
 
         bool IsCompleted { get; }
