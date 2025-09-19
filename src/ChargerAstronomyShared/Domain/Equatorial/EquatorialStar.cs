@@ -39,7 +39,7 @@ namespace ChargerAstronomyShared.Domain.Equatorial
         /// <summary>
         /// The actual brightness of the star
         /// </summary>
-        public double AbsoluteMagnitude { get; set; }
+        public double? AbsoluteMagnitude { get; set; }
         /// <summary>
         /// A value defined by the Harvard classification to categorize stars according to color, temperature and spectral lines
         /// </summary>
