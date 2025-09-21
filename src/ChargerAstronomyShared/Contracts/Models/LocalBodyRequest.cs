@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ChargerAstronomyShared.Contracts.Models
 {
-    class LocalBodyContainer
+    public class LocalBodyContainer
     {
         /// <summary>
         /// A data structure for holding the local celestial bodies
@@ -23,9 +23,9 @@ namespace ChargerAstronomyShared.Contracts.Models
 
     }
 
-    interface LocalBodyRequest
+    public interface LocalBodyRequest
     {
-        LocalBodyContainer celestialList { get; internal set; }
+        LocalBodyContainer celestialList {get; internal set; }
 
         public void requestUpdate();    // request for the values in the Local Body container to be updated
 
