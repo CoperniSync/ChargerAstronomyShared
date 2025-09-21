@@ -1,5 +1,5 @@
 ﻿using ChargerAstronomyShared.Domain.Equatorial;
-using ChargerAstronomyShared.Domain.Horizonal;
+using ChargerAstronomyShared.Domain.Horizontal;
 using System;
 using System.Collections.Generic;
 using System.Text;
