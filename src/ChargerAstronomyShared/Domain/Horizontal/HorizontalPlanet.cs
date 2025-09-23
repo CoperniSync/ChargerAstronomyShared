@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
+using ChargerAstronomyShared.Domain.Equatorial;
 
 namespace ChargerAstronomyShared.Domain.Horizontal
 {
