@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using ChargerAstronomyShared.Domain.Equatorial;
 
-namespace ChargerAstronomyShared.Domain.HorizontalObjects
+namespace ChargerAstronomyShared.Domain.Horizontal
 {
     /// <summary>
     /// Represents the Sun in horizontal coordinate form.
