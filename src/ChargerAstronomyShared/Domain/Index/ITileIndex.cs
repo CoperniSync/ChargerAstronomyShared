@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Numerics;
 
 namespace ChargerAstronomyShared.Domain.Index
 {
-    using ChargerAstronomyShared.Contracts.Models;;
-using ChargerAstronomyShared.Domain.Geometry;
+    using ChargerAstronomyShared.Contracts.Models;
+    using ChargerAstronomyShared.Domain.Geometry;
 
     public interface ITileIndex
     {
