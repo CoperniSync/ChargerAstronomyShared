@@ -7,6 +7,7 @@ namespace ChargerAstronomyShared.Domain.Index
 {
     using ChargerAstronomyShared.Contracts.Models;
     using ChargerAstronomyShared.Domain.Geometry;
+    using System.Net;
 
     public sealed class IcosphereTileIndex : ITileIndex
     {
@@ -14,18 +15,16 @@ namespace ChargerAstronomyShared.Domain.Index
 
         public IReadOnlyList<TileId> Tiles => tiles.AsReadOnly();
 
-        public IcosphereTileIndex(int subdivisions = 3)
+        public IcosphereTileIndex(int subdivisions = 0)
         {
             if (subdivisions < 0 || subdivisions > 5)
             {
                 throw new ArgumentOutOfRangeException(nameof(subdivisions), "Subdivisions must be between 0 and 5");
             }
 
-            // Start with an icosahedron
             vertices.AddRange(GetIsocahedronVertices());
             faces.AddRange(GetIsocahedronIndices());
 
-            // Subdivide the faces
             for (int i = 0; i < subdivisions; i++)
             {
                 SubdivideIcosphere();
@@ -56,7 +55,14 @@ namespace ChargerAstronomyShared.Domain.Index
 
         public TileId DirectionToTileId(Vector3 direction)
         {
-            throw new NotImplementedException();
+            foreach ((TileId tileId, TileGeometry tileGeometry) in EnumerateGeometry())
+            {
+                // do triangle point intserction test here   
+                return tileId;
+            }
+
+            // This should never happen unless the sphere is not fully covered by tiles
+            throw new Exception($"Tile for direction {direction.ToString()} not found");
         }
         public IEnumerable<TileId> Neigbors(TileId id)
         {
@@ -109,8 +115,44 @@ namespace ChargerAstronomyShared.Domain.Index
 
         private void SubdivideIcosphere()
         {
+            var newFaces = new List<(int a, int b, int c)>(faces.Count * 4);
 
+            // cache midpoints so we dont create two midpoints for the same edge
+            var midpointCache = new Dictionary<(int, int), int>(faces.Count * 3);
+
+            int Midpoint(int i0, int i1)
+            {
+                var key = i0 < i1 ? (i0, i1) : (i1, i0);
+                if (midpointCache.TryGetValue(key, out int idx))
+                    return idx;
+
+                var m = (vertices[i0] + vertices[i1]) * 0.5f;
+                idx = vertices.Count;
+                vertices.Add(m);
+                midpointCache[key] = idx;
+                return idx;
+            }
+
+            int faceCount = faces.Count; 
+            for (int i = 0; i < faceCount; i++)
+            {
+                var (a, b, c) = faces[i];
+
+                int mid12 = Midpoint(a, b); // between a-b
+                int mid23 = Midpoint(b, c); // between b-c
+                int mid31 = Midpoint(c, a); // between c-a
+
+                // (a -> b -> c)
+                newFaces.Add((a, mid12, mid31));
+                newFaces.Add((b, mid23, mid12));
+                newFaces.Add((c, mid31, mid23));
+                newFaces.Add((mid12, mid23, mid31));
+            }
+
+            faces.Clear();
+            faces.AddRange(newFaces);
         }
+
 
         private static List<Vector3> GetIsocahedronVertices()
         {
