@@ -6,9 +6,10 @@ namespace ChargerAstronomyShared.Domain.Heat
 {
     public sealed class HeatConfig
     {
-        public float TauSeconds = 1.5f;        // decay time constant
-        public float ActiveThreshold = 0.6f;   // HOT if heat >= this
-        public int MinWarmFrames = 10;       // this will be the number of grace frame before eviction
-        public int MinColdFrames = 30;       // extra frames at 0 before evict signal
+        public float DecayPerSecond { get; set; } = 0.05f;
+        public float ClampMin { get; set; } = 0f;
+        public float ClampMax { get; set;  } = 1f;
+        public float Epsilon { get; } = 1e-6f; // no need to have setters for this
+        public bool AreaWeighted { get; set;  } = true;    
     }
 }

@@ -25,8 +25,7 @@ namespace ChargerAstronomyShared.Domain.SpatialIndex
 
             foreach (var star in stars)
             {
-                var dir = ToUnitVector(star);
-                var tile = tileIndex.DirectionToTileId(dir);
+                TileId tile = GetTileForStar(star);
                 starsByTile[tile].Add(star);
             }
         }
