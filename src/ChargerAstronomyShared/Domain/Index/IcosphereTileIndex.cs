@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Numerics;
+using System.Net;
+using System.Runtime.InteropServices;
 
 namespace ChargerAstronomyShared.Domain.Index
 {
     using ChargerAstronomyShared.Contracts.Models;
     using ChargerAstronomyShared.Domain.Geometry;
-    using System.Net;
 
     public sealed class IcosphereTileIndex : ITileIndex
     {
@@ -45,7 +46,7 @@ namespace ChargerAstronomyShared.Domain.Index
                 var v3 = vertices[face.c - 1];
 
                 var center = Vector3.Normalize((v1 + v2 + v3) / 3);
-                var alpha = Math.Acos(Vector3.Dot(v1, v2)); 
+                var alpha = Math.Acos(Vector3.Dot(center, v2)); 
 
                 var tileId = new TileId(i);
                 tiles.Add(tileId);
@@ -55,15 +56,59 @@ namespace ChargerAstronomyShared.Domain.Index
 
         public TileId DirectionToTileId(Vector3 direction)
         {
+            const float EPS = 1e-7f;
+
             foreach ((TileId tileId, TileGeometry tileGeometry) in EnumerateGeometry())
             {
-                // do triangle point intserction test here   
-                return tileId;
+                var v1 = tileGeometry.Vertices[0];
+                var v2 = tileGeometry.Vertices[1];
+                var v3 = tileGeometry.Vertices[2];
+                
+                var n = tileGeometry.Center;
+
+                // from (0 + t * d - p0) . n = 0
+
+                float denom = Vector3.Dot(n, direction);
+                if (denom <= EPS) continue; 
+
+                float t = Vector3.Dot(n, v1) / denom;
+                var p = direction * t;
+
+                // cramer's rule wont work for points in worldspace
+                // so we form a basis with u,v on the plane of the triangle and n normal to it
+
+                float dot = MathF.Abs(Vector3.Dot(n, Vector3.UnitY));
+                Vector3 helper = dot < 1 - EPS ? Vector3.UnitY : Vector3.UnitZ;
+
+                var u = Vector3.Normalize(Vector3.Cross(helper, n));
+                var v = Vector3.Cross(n, u);
+
+                v1 = new Vector3(Vector3.Dot(v1, u), Vector3.Dot(v1, v), 0);
+                v2 = new Vector3(Vector3.Dot(v2, u), Vector3.Dot(v2, v), 0);
+                v3 = new Vector3(Vector3.Dot(v3, u), Vector3.Dot(v3, v), 0);
+                p = new Vector3(Vector3.Dot(p, u), Vector3.Dot(p, v), 0);
+
+                // just cramer's rule
+
+                float D = (v1.X - v3.X) * (v2.Y - v3.Y) - (v2.X - v3.X) * (v1.Y - v3.Y);
+                if (MathF.Abs(D) < EPS)
+                    continue; 
+
+                float a = ((p.X - v3.X) * (v2.Y - v3.Y) - (v2.X - v3.X) * (p.Y - v3.Y)) / D;
+                float b = ((v1.X - v3.X) * (p.Y - v3.Y) - (p.X - v3.X) * (v1.Y - v3.Y)) / D;
+                float c = 1f - a - b;
+
+                // using barycentric coordinates we know if a,b,c > 0 
+                // then our point lies within the triangle 
+
+                if (a >= -EPS && b >= -EPS && c >= -EPS)
+                    return tileId;
             }
 
             // This should never happen unless the sphere is not fully covered by tiles
-            throw new Exception($"Tile for direction {direction.ToString()} not found");
+            throw new InvalidOperationException($"Tile for direction {direction.ToString()} not found");
         }
+
         public IEnumerable<TileId> Neigbors(TileId id)
         {
             // This will be a pretty difficult operation to implement, going to skip for now.

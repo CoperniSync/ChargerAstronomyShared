@@ -13,6 +13,7 @@ namespace ChargerAstronomyShared.Domain.Index
         int TileCount { get; }
         IReadOnlyList<TileId> Tiles { get; }
         IEnumerable<TileId> Enumerate();
+        IEnumerable<Tuple<TileId, TileGeometry>> EnumerateGeometry();
         Vector3 GetTileCenter(TileId id);
         double GetTileAlpha(TileId id);
         IEnumerable<TileId> Neigbors(TileId id);
