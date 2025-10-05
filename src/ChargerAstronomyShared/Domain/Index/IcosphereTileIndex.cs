@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Numerics;
+using System.Net;
+using System.Runtime.InteropServices;
 
 namespace ChargerAstronomyShared.Domain.Index
 {
     using ChargerAstronomyShared.Contracts.Models;
     using ChargerAstronomyShared.Domain.Geometry;
-    using System.Net;
-    using System.Runtime.InteropServices;
 
     public sealed class IcosphereTileIndex : ITileIndex
     {
