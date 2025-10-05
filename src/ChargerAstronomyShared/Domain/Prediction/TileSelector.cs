@@ -14,13 +14,13 @@ public static class TileSelector
         ITileIndex index,
         Vector3 cameraDirection,
         float fov,               // radians
+        List<TileId> scratch,
         bool contains = false,
-        float eps = 1e-6f)
+        float eps = 1e-6f
+        )
     {
         cameraDirection = Vector3.Normalize(cameraDirection);
         float halfFov = fov * 0.5f;
-
-        var selected = new List<TileId>();
 
         foreach (var (tileId, geom) in index.EnumerateGeometry())
         {
@@ -30,7 +30,7 @@ public static class TileSelector
             if (!contains)
             {
                 float limit = MathF.Cos(halfFov + alpha);
-                if (dot >= limit - eps) selected.Add(tileId);
+                if (dot >= limit - eps) scratch.Add(tileId);
             }
             else
             {
@@ -40,16 +40,16 @@ public static class TileSelector
                     // here the camera fov is smaller than the tile
                     // might happen if you are zoomed in realllly close
                     // we treat it as an intersection
-                    selected.Add(tileId);
+                    scratch.Add(tileId);
                 }
                 else
                 {
                     float limit = MathF.Cos(inner);
-                    if (dot >= limit - eps) selected.Add(tileId);
+                    if (dot >= limit - eps) scratch.Add(tileId);
                 }
             }
         }
 
-        return selected;
+        return scratch;
     }
 }
