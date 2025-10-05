@@ -1,45 +1,55 @@
-﻿using System;
+﻿using ChargerAstronomyShared.Contracts.Models;
+using ChargerAstronomyShared.Domain.Index;
 using System.Collections.Generic;
-using System.Text;
 using System.Numerics;
+using System;
 
-namespace ChargerAstronomyShared.Domain.Prediction
+public static class TileSelector
 {
-    using ChargerAstronomyShared.Contracts.Models;
-    using ChargerAstronomyShared.Domain.Geometry;
-    using ChargerAstronomyShared.Domain.Index;
+    // This is a really basis predictor for now, just does camera tile intsection
+    // a more sophisticated predictor will be needed later
+    // also its assumed that the cameraDirection is in equatorial space
 
-    public static class TileSelector
+    public static List<TileId> Select(
+        ITileIndex index,
+        Vector3 cameraDirection,
+        float fov,               // radians
+        bool contains = false,
+        float eps = 1e-6f)
     {
-        public static List<TileId> Select(
-            ITileIndex index, 
-            Vector3 cameraDirection, 
-            float fov,
-            bool contains = false,
-            float eps = 1e-6f)
-        {
-            cameraDirection = Vector3.Normalize(cameraDirection);
+        cameraDirection = Vector3.Normalize(cameraDirection);
+        float halfFov = fov * 0.5f;
 
-            List<TileId> selected = new List<TileId>();
-            foreach((TileId tileId, TileGeometry tileGeometry) in index.EnumerateGeometry())
+        var selected = new List<TileId>();
+
+        foreach (var (tileId, geom) in index.EnumerateGeometry())
+        {
+            float alpha = (float)geom.Alpha;         
+            float dot = Vector3.Dot(cameraDirection, geom.Center); 
+
+            if (!contains)
             {
-                float halfFov = fov / 2.0f;
-                float dot = Vector3.Dot(cameraDirection, tileGeometry.Center);
-               
-                if(contains)
+                float limit = MathF.Cos(halfFov + alpha);
+                if (dot >= limit - eps) selected.Add(tileId);
+            }
+            else
+            {
+                float inner = halfFov - alpha;
+                if (inner <= 0f)
                 {
-                    if(dot >= Math.Cos(halfFov - tileGeometry.Alpha + eps))
-                        selected.Add(tileId);
+                    // here the camera fov is smaller than the tile
+                    // might happen if you are zoomed in realllly close
+                    // we treat it as an intersection
+                    selected.Add(tileId);
                 }
                 else
                 {
-                    if (dot >= Math.Cos(halfFov + tileGeometry.Alpha + eps))
-                        selected.Add(tileId);
+                    float limit = MathF.Cos(inner);
+                    if (dot >= limit - eps) selected.Add(tileId);
                 }
-
-            }    
-
-            return selected;
+            }
         }
+
+        return selected;
     }
 }
