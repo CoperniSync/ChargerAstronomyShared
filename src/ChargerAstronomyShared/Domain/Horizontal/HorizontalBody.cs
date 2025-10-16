@@ -26,12 +26,12 @@ namespace ChargerAstronomyShared.Domain.Horizontal
         /// <summary>
         /// The angle in decimal degrees formed between the horizon and the star
         /// </summary>
-        public double Altitude { get; internal set; }
+        public double Altitude { get; set; }
 
         /// <summary>
         /// The angle in decimal degrees formed between due north and the star
         /// </summary>
-        public double Azimuth { get; internal set; }
+        public double Azimuth { get; set; }
 
         /// <summary>
         /// The apparent brightness of the star
