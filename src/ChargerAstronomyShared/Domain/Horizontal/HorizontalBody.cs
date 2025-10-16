@@ -8,20 +8,22 @@ namespace ChargerAstronomyShared.Domain.Horizontal
     /// <summary>
     /// Represents an object that can be located in the sky according to horizontal coordinates.
     /// </summary>
-    public abstract class HorizontalBody
+    public abstract class HorizontalBody : EquatorialCelestialBody
     {
         /// <summary>
         /// Creates a new object by wrapping a <see cref="EquatorialCelestialBody"/>
         /// </summary>
-        protected HorizontalBody(EquatorialCelestialBody body)
+        protected HorizontalBody(EquatorialCelestialBody body) : base(body.BodyType)
         {
-            EquatorialBody = body;
+            this.RightAscension = body.RightAscension;
+            this.Declination = body.Declination;
+            this.Distance = body.Distance;
+            this.Magnitude = body.Magnitude;
         }
 
-        /// <summary>
-        /// The <see cref="EquatorialCelestialBody"/> to base off of.
-        /// </summary>
-        public EquatorialCelestialBody EquatorialBody { get; set; }
+        protected HorizontalBody(BodyType bodyType) : base(bodyType)
+        {
+        }
 
         /// <summary>
         /// The angle in decimal degrees formed between the horizon and the star
@@ -32,16 +34,6 @@ namespace ChargerAstronomyShared.Domain.Horizontal
         /// The angle in decimal degrees formed between due north and the star
         /// </summary>
         public double Azimuth { get; internal set; }
-
-        /// <summary>
-        /// The apparent brightness of the star
-        /// </summary>
-        public double Magnitude { get { return EquatorialBody.Magnitude; } internal set { EquatorialBody.Magnitude = value; } }
-
-        /// <summary>
-        /// The distance (in lightyears) from the star to earth
-        /// </summary>
-        public double Distance { get { return EquatorialBody.Distance; } set { EquatorialBody.Distance = value; } }
 
     }
 }

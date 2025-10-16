@@ -8,6 +8,7 @@ namespace ChargerAstronomyShared.Domain.Equatorial
 
     public sealed class EquatorialStar : EquatorialCelestialBody
     {
+        public EquatorialStar() : base(BodyType.Star) { }
         /// <summary>
         /// The unique ID in the Yale Star catalog
         /// </summary>

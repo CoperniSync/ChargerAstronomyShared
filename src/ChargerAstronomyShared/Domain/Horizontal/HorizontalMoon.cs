@@ -14,7 +14,7 @@ namespace ChargerAstronomyShared.Domain.Horizontal
         /// Creates a new object by wrapping a <see cref="EquatorialCelestialBody"/>
         /// </summary>
         /// <param name="body">The <see cref="EquatorialCelestialBody"/> to base this object off of.</param>
-        public HorizontalMoon(EquatorialCelestialBody body) : base(body)
+        public HorizontalMoon() : base(BodyType.Moon)
         {
             // empty in old stargazer - jojo
         }

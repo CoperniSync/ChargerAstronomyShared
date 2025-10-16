@@ -10,20 +10,16 @@ namespace ChargerAstronomyShared.Domain.Horizontal
     /// </summary>
     public class HorizontalPlanet : HorizontalBody
     {
-        /// <summary>
-        /// The common name of the planet.
-        /// </summary>
-        public string Name { get; set; }
         public double PhaseAngle { get; set; }
+        public string Name { get; }
 
         /// <summary>
         /// Returns a new planet object
         /// </summary>
         /// <param name="name">The name of the planet</param>
-        public HorizontalPlanet(string name, double phaseAngle, EquatorialCelestialBody body) : base(body)
+        public HorizontalPlanet(BodyType body, string Name) : base(body)
         {
-            Name = name;
-            PhaseAngle = phaseAngle;
+           this.Name = Name;
         }
     }
 }
