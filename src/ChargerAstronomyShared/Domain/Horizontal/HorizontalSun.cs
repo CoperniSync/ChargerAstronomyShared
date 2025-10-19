@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using ChargerAstronomyShared.Domain.Equatorial;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ChargerAstronomyShared.Domain.Horizontal
 {
@@ -16,9 +17,8 @@ namespace ChargerAstronomyShared.Domain.Horizontal
         /// Creates a new instance using a celestial body to contain basic information
         /// </summary>
         /// <param name="body">A new <c>HorizontalSun</c> object.</param>
-        public HorizontalSun(EquatorialCelestialBody body) : base(body)
+        public HorizontalSun() : base(BodyType.Sun)
         {
-            // empty in old stargazer - jojo
         }
     }
 }

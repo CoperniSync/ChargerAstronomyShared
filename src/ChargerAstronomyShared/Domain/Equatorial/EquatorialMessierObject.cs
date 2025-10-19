@@ -6,6 +6,7 @@ namespace ChargerAstronomyShared.Domain.Equatorial
 {
     public sealed class EquatorialMessierObject : EquatorialCelestialBody
     {
+        public EquatorialMessierObject() : base(BodyType.Star) { }
         /// <summary>
         /// The 'M' prefixed identification number of the object
         /// </summary>
