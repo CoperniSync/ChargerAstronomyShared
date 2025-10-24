@@ -4,6 +4,11 @@ using System.Text;
 
 namespace ChargerAstronomyShared.Domain.Heat
 {
+
+    /// <summary>
+    /// Represents the configuration settings for heat-related calculations, including decay rate, clamping limits, and
+    /// precision thresholds.
+    /// </summary>
     public sealed class HeatConfig
     {
         public float DecayPerSecond { get; set; } = 0.05f;
