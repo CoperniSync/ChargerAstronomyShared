@@ -30,6 +30,12 @@ namespace ChargerAstronomyShared.Domain.SpatialIndex
             }
         }
 
+
+        /// <summary>
+        /// Returns the <see cref="TileId"/> containing the given star.
+        /// </summary>
+        /// <param name="star"></param>
+        /// <returns></returns>
         public TileId GetTileForStar(EquatorialStar star)
         {
             var dir = ToUnitVector(star);
@@ -43,6 +49,11 @@ namespace ChargerAstronomyShared.Domain.SpatialIndex
             return list;
         }
 
+        /// <summary>
+        /// Converts the equatorial coordinates of a star to a unit vector.
+        /// </summary>
+        /// <param name="star"></param>
+        /// <returns></returns>
         static Vector3 ToUnitVector(EquatorialStar star)
         {
             double raRad = star.RightAscension * Math.PI / 180.0;
