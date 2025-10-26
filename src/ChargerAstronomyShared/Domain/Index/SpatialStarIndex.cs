@@ -30,6 +30,57 @@ namespace ChargerAstronomyShared.Domain.SpatialIndex
             }
         }
 
+        /// <summary>
+        /// Adds a new star to the collection and associates it with the appropriate tile.
+        /// </summary>
+        /// <remarks>The star is added to the main collection and also indexed by its corresponding tile.
+        /// If the tile does not already exist in the index, it will be created.</remarks>
+        /// <param name="newStar">The star to add. Must not be <see langword="null"/>.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="newStar"/> is <see langword="null"/>.</exception>
+        public void AddStar(EquatorialStar newStar)
+        {
+            if (newStar == null)
+                throw new ArgumentNullException(nameof(newStar));
+
+            stars.Add(newStar);
+            TileId tile = GetTileForStar(newStar);
+
+            if (!starsByTile.ContainsKey(tile))
+                starsByTile[tile] = new List<EquatorialStar>();
+
+            starsByTile[tile].Add(newStar);
+        }
+
+        /// <summary>
+        /// Adds a collection of stars to the collection and associates it with the appropriate tile.
+        /// </summary>
+        /// <remarks>Each star is added to the main collection and also indexed by its corresponding tile.
+        /// If the tile does not already exist in the index, it will be created.</remarks>
+        /// <param name="newStars">A <see cref="PageResult{EquatorialStar}"/> containing the stars to add.  The collection must not be <see
+        /// langword="null"/>.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="newStars"/> is <see langword="null"/>.</exception>
+        public void AddStar(PageResult<EquatorialStar> newStars)
+        {
+            if (newStars == null)
+                throw new ArgumentNullException(nameof(newStars));
+
+            foreach (var star in newStars.Items)
+            {
+                stars.Add(star);
+                TileId tile = GetTileForStar(star);
+
+                if (!starsByTile.ContainsKey(tile))
+                    starsByTile[tile] = new List<EquatorialStar>();
+
+                starsByTile[tile].Add(star);
+            }
+        }
+
+        /// <summary>
+        /// Returns the <see cref="TileId"/> containing the given star.
+        /// </summary>
+        /// <param name="star"></param>
+        /// <returns></returns>
         public TileId GetTileForStar(EquatorialStar star)
         {
             var dir = ToUnitVector(star);
@@ -43,6 +94,11 @@ namespace ChargerAstronomyShared.Domain.SpatialIndex
             return list;
         }
 
+        /// <summary>
+        /// Converts the equatorial coordinates of a star to a unit vector.
+        /// </summary>
+        /// <param name="star"></param>
+        /// <returns></returns>
         static Vector3 ToUnitVector(EquatorialStar star)
         {
             double raRad = star.RightAscension * Math.PI / 180.0;

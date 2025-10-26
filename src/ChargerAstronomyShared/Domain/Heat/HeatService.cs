@@ -20,10 +20,28 @@ namespace ChargerAstronomyShared.Domain.Heat
             this.index = index ?? throw new ArgumentNullException(nameof(index));
         }
 
+        /// <summary>
+        /// Retrieves the current heat map.
+        /// </summary>
+        /// <returns>The <see cref="HeatMap"/> instance representing the current heat map data.</returns>
         public HeatMap GetHeatMap() => heatMap;
 
+        /// <summary>
+        /// Retrieves the current tile index.
+        /// </summary>
+        /// <returns>An object implementing <see cref="ITileIndex"/> that represents the current tile index.</returns>
         public ITileIndex GetTileIndex() => index;
 
+        /// <summary>
+        /// Updates the heat map and processes tile selection based on the provided time step.
+        /// </summary>
+        /// <remarks>This method performs the following operations: <list type="bullet"> <item>
+        /// <description>Applies a decay step to the heat map using the specified <paramref
+        /// name="deltaTime"/>.</description> </item> <item> <description>Selects tiles based on a simulated camera
+        /// direction and field of view, storing the results in a temporary collection.</description> </item> <item>
+        /// <description>Updates the heat map values for the selected tiles, ensuring they meet a minimum observed
+        /// threshold.</description> </item> </list></remarks>
+        /// <param name="deltaTime">The time step, in seconds, used to update the heat map decay.</param>
         public void Step(float deltaTime)
         {
             
