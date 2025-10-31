@@ -82,11 +82,22 @@ namespace ChargerAstronomyShared.Contracts.Repositories
         /// <param name="sun"></param>
         void UpdatePositionOf(HorizontalSun sun);
 
+        /// <summary>
+        /// Retrieves the current time.
+        /// </summary>
+        /// <returns>The current time as a <see cref="DateTime"/> instance.</returns>
         DateTime getTime()
         {
             return CurrentTime;
         }
 
+        /// <summary>
+        /// Get the latitude and longitude values in formatted strings representing their respective directions.
+        /// </summary>
+        /// <remarks>Positive latitude values are represented as "N"
+        /// (North), negative as "S" (South). Positive longitude values are represented as "E" (East), negative as "W"
+        /// (West).</remarks>
+        /// <returns>A tuple containing two strings. Example format: ("34.05°N", "118.25°W")</returns>
         (string, string) getLongLat()
         {
             string latDir = Latitude >= 0 ? "N" : "S";
