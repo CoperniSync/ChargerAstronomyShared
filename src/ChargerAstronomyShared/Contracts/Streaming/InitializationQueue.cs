@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ChargerAstronomyShared.Contracts.Streaming
 {
-    public interface IInitializationQueue<T>
+    public interface BlockingQueue<T>
     {
         IProducerConsumerCollection<T> Collection { get; }
 

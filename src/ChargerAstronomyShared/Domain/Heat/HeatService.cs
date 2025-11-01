@@ -6,6 +6,7 @@ namespace ChargerAstronomyShared.Domain.Heat
 {
     using ChargerAstronomyShared.Contracts.Models;
     using ChargerAstronomyShared.Domain.Index;
+    using System.Threading.Tasks;
 
     public sealed class HeatService
     {
@@ -13,7 +14,7 @@ namespace ChargerAstronomyShared.Domain.Heat
         public readonly ITileIndex index;
 
         private readonly List<TileId> scratch = new List<TileId>(capacity: 256);
-
+-
         public HeatService(HeatMap heatMap, ITileIndex index)
         {
             this.heatMap = heatMap ?? throw new ArgumentNullException(nameof(heatMap));
@@ -42,18 +43,15 @@ namespace ChargerAstronomyShared.Domain.Heat
         /// <description>Updates the heat map values for the selected tiles, ensuring they meet a minimum observed
         /// threshold.</description> </item> </list></remarks>
         /// <param name="deltaTime">The time step, in seconds, used to update the heat map decay.</param>
-        public void Step(float deltaTime)
+        public async Task Step(float deltaTime, Vector3 cameraDirection, float horizontalFOV)
         {
             
             // ignore these for now, just default until we get real ones
-            Vector3 cameraDirection = Vector3.One;
-            float fov = 45.0f * (float)(Math.PI / 180.0);
-
-            heatMap.StepDecay(deltaTime);
             
-
+            heatMap.StepDecay(deltaTime);
             scratch.Clear();
-            TileSelector.Select(index, cameraDirection, fov, scratch);
+            
+            TileSelector.Select(index, cameraDirection, horizontalFOV, scratch);
 
             const float observed = 1.0f;
             for (int i = 0; i < scratch.Count; i++)
@@ -65,8 +63,6 @@ namespace ChargerAstronomyShared.Domain.Heat
                 if (prev < observed)
                     heatMap.Set(scratch, 1.0f);
             }
-
-            // there might be more things we do in this service in the future but for now this is all we need
         }
     }
 }
