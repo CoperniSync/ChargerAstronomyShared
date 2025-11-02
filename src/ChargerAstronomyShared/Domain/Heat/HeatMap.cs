@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ChargerAstronomyShared.Contracts.Models;
 
 namespace ChargerAstronomyShared.Domain.Heat
@@ -105,15 +106,9 @@ namespace ChargerAstronomyShared.Domain.Heat
        /// only tiles with heat values strictly greater than <paramref name="value"/> are included.</param>
        /// <returns>A list of <see cref="TileId"/> objects representing the tiles that meet the specified heat value condition.
        /// The list will be empty if no tiles satisfy the condition.</returns>
-        public List<TileId> TilesAbove(float value, bool inclusive = true)
+        public IEnumerable<TileId> TilesAbove(float value, bool inclusive = true)
         {
-            var res = new List<TileId>();
-            foreach (var (id, heat) in heatMap)
-            {
-                if (inclusive ? heat >= value : heat > value)
-                    res.Add(id);
-            }
-            return res;
+            return heatMap.Where((id, heat) => inclusive ? heat >= value : heat > value).Select(kvp => kvp.Key);
         }
 
         /// <summary>
@@ -125,15 +120,9 @@ namespace ChargerAstronomyShared.Domain.Heat
         /// otherwise, only tiles with heat values strictly less than <paramref name="value"/> are included.</param>
         /// <returns>A list of <see cref="TileId"/> objects representing the tiles that meet the specified condition. The list
         /// will be empty if no tiles satisfy the condition.</returns>
-        public List<TileId> TilesBelow(float value, bool inclusive = true)
+        public IEnumerable<TileId> TilesBelow(float value, bool inclusive = true)
         {
-            var res = new List<TileId>();
-            foreach (var (id, heat) in heatMap)
-            {
-                if (inclusive ? heat <= value : heat < value)
-                    res.Add(id);
-            }
-            return res;
+            return heatMap.Where((id, heat) => inclusive ? heat <= value : heat < value).Select(kvp => kvp.Key);
         }
 
         /// <summary>
@@ -156,6 +145,16 @@ namespace ChargerAstronomyShared.Domain.Heat
                 if (inclusive ? inInc : inExc) res.Add(id);
             }
             return res;
+        }
+
+        public IEnumerable<TileId> InactiveTilesAboveZero()
+        {
+            return TilesAbove(0f).Where(id => !id.active);
+        }
+
+        public IEnumerable<TileId> ActiveTileAtZero()
+        {
+            return TilesBelow(0f, true).Where(id => id.active);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using ChargerAstronomyShared.Contracts.Models;
 using ChargerAstronomyShared.Domain.Equatorial;
+using ChargerAstronomyShared.Domain.Horizontal;
 using ChargerAstronomyShared.Domain.Index;
 
 namespace ChargerAstronomyShared.Domain.SpatialIndex
@@ -10,18 +11,23 @@ namespace ChargerAstronomyShared.Domain.SpatialIndex
     public sealed class SpatialStarIndex 
     {
         public ITileIndex TileIndex { get; }
-        public IReadOnlyList<EquatorialStar> Stars => stars;
+        public IReadOnlyList<HorizontalStar> Stars => stars;
 
-        readonly List<EquatorialStar> stars;
-        readonly Dictionary<TileId, List<EquatorialStar>> starsByTile = new Dictionary<TileId, List<EquatorialStar>>();
+        readonly List<HorizontalStar> stars;
+        readonly Dictionary<TileId, List<HorizontalStar>> starsByTile = new Dictionary<TileId, List<HorizontalStar>>();
 
-        public SpatialStarIndex(ITileIndex tileIndex, IEnumerable<EquatorialStar> inputStars)
+        public SpatialStarIndex(ITileIndex tileIndex)
+            : this(tileIndex, Array.Empty<HorizontalStar>())
+        {
+        }
+
+        public SpatialStarIndex(ITileIndex tileIndex, IEnumerable<HorizontalStar> inputStars)
         {
             TileIndex = tileIndex ?? throw new ArgumentNullException(nameof(tileIndex));
-            stars = new List<EquatorialStar>(inputStars ?? throw new ArgumentNullException(nameof(inputStars)));
+            stars = new List<HorizontalStar>(inputStars ?? throw new ArgumentNullException(nameof(inputStars)));
 
             foreach (var id in tileIndex.Enumerate())
-                starsByTile[id] = new List<EquatorialStar>();
+                starsByTile[id] = new List<HorizontalStar>();
 
             foreach (var star in stars)
             {
@@ -37,7 +43,7 @@ namespace ChargerAstronomyShared.Domain.SpatialIndex
         /// If the tile does not already exist in the index, it will be created.</remarks>
         /// <param name="newStar">The star to add. Must not be <see langword="null"/>.</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="newStar"/> is <see langword="null"/>.</exception>
-        public void AddStar(EquatorialStar newStar)
+        public void AddStar(HorizontalStar newStar)
         {
             if (newStar == null)
                 throw new ArgumentNullException(nameof(newStar));
@@ -46,7 +52,7 @@ namespace ChargerAstronomyShared.Domain.SpatialIndex
             TileId tile = GetTileForStar(newStar);
 
             if (!starsByTile.ContainsKey(tile))
-                starsByTile[tile] = new List<EquatorialStar>();
+                starsByTile[tile] = new List<HorizontalStar>();
 
             starsByTile[tile].Add(newStar);
         }
@@ -56,10 +62,10 @@ namespace ChargerAstronomyShared.Domain.SpatialIndex
         /// </summary>
         /// <remarks>Each star is added to the main collection and also indexed by its corresponding tile.
         /// If the tile does not already exist in the index, it will be created.</remarks>
-        /// <param name="newStars">A <see cref="PageResult{EquatorialStar}"/> containing the stars to add.  The collection must not be <see
+        /// <param name="newStars">A <see cref="PageResult{HorizontalStar}"/> containing the stars to add.  The collection must not be <see
         /// langword="null"/>.</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="newStars"/> is <see langword="null"/>.</exception>
-        public void AddStar(PageResult<EquatorialStar> newStars)
+        public void AddStar(PageResult<HorizontalStar> newStars)
         {
             if (newStars == null)
                 throw new ArgumentNullException(nameof(newStars));
@@ -70,7 +76,7 @@ namespace ChargerAstronomyShared.Domain.SpatialIndex
                 TileId tile = GetTileForStar(star);
 
                 if (!starsByTile.ContainsKey(tile))
-                    starsByTile[tile] = new List<EquatorialStar>();
+                    starsByTile[tile] = new List<HorizontalStar>();
 
                 starsByTile[tile].Add(star);
             }
@@ -81,16 +87,17 @@ namespace ChargerAstronomyShared.Domain.SpatialIndex
         /// </summary>
         /// <param name="star"></param>
         /// <returns></returns>
-        public TileId GetTileForStar(EquatorialStar star)
+        public TileId GetTileForStar(HorizontalStar star)
         {
             var dir = ToUnitVector(star);
             return TileIndex.DirectionToTileId(dir);
         }
 
-        public IReadOnlyList<EquatorialStar> GetStarsInTile(TileId tile)
+        public IReadOnlyList<HorizontalStar> GetStarsInTile(TileId tile)
         {
             if (!starsByTile.TryGetValue(tile, out var list))
                 throw new ArgumentOutOfRangeException(nameof(tile));
+
             return list;
         }
 
@@ -99,7 +106,7 @@ namespace ChargerAstronomyShared.Domain.SpatialIndex
         /// </summary>
         /// <param name="star"></param>
         /// <returns></returns>
-        static Vector3 ToUnitVector(EquatorialStar star)
+        static Vector3 ToUnitVector(HorizontalStar star)
         {
             double raRad = star.RightAscension * Math.PI / 180.0;
             double decRad = star.Declination * Math.PI / 180.0;
