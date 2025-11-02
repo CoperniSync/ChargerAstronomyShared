@@ -14,7 +14,7 @@ namespace ChargerAstronomyShared.Domain.Heat
         public readonly ITileIndex index;
 
         private readonly List<TileId> scratch = new List<TileId>(capacity: 256);
--
+
         public HeatService(HeatMap heatMap, ITileIndex index)
         {
             this.heatMap = heatMap ?? throw new ArgumentNullException(nameof(heatMap));
