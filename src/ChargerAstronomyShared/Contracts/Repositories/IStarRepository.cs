@@ -18,7 +18,7 @@ namespace ChargerAstronomyShared.Contracts.Repositories
 
         Task<PageResult<EquatorialStar>> QueryBySkyRegionAsync(SkyRegion skyRegion, PageRequest page);
 
-        Task ProducePagesAsync(IInitializationQueue<PageResult<EquatorialStar>> queue, 
+        Task ProducePagesAsync(BlockingQueue<PageResult<EquatorialStar>> queue, 
             PageRequest firstPage, CancellationToken cancellationToken = default);
 
     }
