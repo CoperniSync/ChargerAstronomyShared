@@ -37,7 +37,7 @@ namespace ChargerAstronomyShared.Contracts.Repositories
         /// <param name="queue">The queue into which the produced pages will be enqueued.</param>
         /// <param name="firstPage">The initial page request that specifies the starting point for producing pages.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests. The default value is <see cref="CancellationToken.None"/>.</param>
-        Task ProducePagesAsync(IInitializationQueue<PageResult<EquatorialStar>> queue, 
+        Task ProducePagesAsync(BlockingQueue<PageResult<EquatorialStar>> queue, 
             PageRequest firstPage, CancellationToken cancellationToken = default);
 
     }

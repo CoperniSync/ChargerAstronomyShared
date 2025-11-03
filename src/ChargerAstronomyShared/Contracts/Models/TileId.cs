@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Text;
 
 namespace ChargerAstronomyShared.Contracts.Models
@@ -7,7 +8,7 @@ namespace ChargerAstronomyShared.Contracts.Models
     /// <summary>
     /// Represents a unique identifier for a tile.
     /// </summary>
-    public readonly struct TileId : IEquatable<TileId> // VS auto completed/added this IEquatable thing, and it seems useful so ill keep it 
+    public class TileId : IEquatable<TileId> // VS auto completed/added this IEquatable thing, and it seems useful so ill keep it 
     {
         /// <summary>
         /// The unique integer identifier of a tile.
@@ -18,12 +19,19 @@ namespace ChargerAstronomyShared.Contracts.Models
         /// Initializes a new <see cref="TileId"/> with the specified index.
         /// </summary>
         /// <param name="index">The index representing the unique identifier of the tile.</param>
-        public TileId(int index) => Index = index;
+        public TileId(int index) { Index = index; active = false; }
 
         /// <summary>
-        /// Indicates whether this instance is equal to another <see cref="TileId"/>.
+        /// Indicates whether the object is active.
+        /// </summary>
+        public bool active;
+
+        /// <summary>
+        /// Determines whether the current <see cref="TileId"/> is equal to the specified <see cref="TileId"/>.
         /// </summary>
         /// <param name="tileId">The <see cref="TileId"/> to compare with the current instance.</param>
+        /// <returns><see langword="true"/> if the specified <see cref="TileId"/> has the same <see cref="Index"/> value as the
+        /// current instance; otherwise, <see langword="false"/>.</returns>
         public bool Equals(TileId tileId) => Index == tileId.Index;
 
         /// <summary>
