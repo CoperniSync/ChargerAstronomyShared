@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace ChargerAstronomyShared.Contracts.Repositories
 {
-    public interface IEngineService
+    public interface IEngineService <T> where T : IHorizontal
     {
         IEquatorialCalculator StartServices();
 
         public Task Step(float deltaTime, Vector3 cameraDirection, float horizontalFOV);
 
-        public BlockingCollection<TileId> ActivationQueue { get; }
-        public BlockingCollection<TileId> DeactivationQueue { get; }
-        public BlockingCollection<TileId> UpdateTransformQueue { get; }
+        public BlockingCollection<T> ActivationQueue { get; }
+        public BlockingCollection<T> DeactivationQueue { get; }
+        public BlockingCollection<T> UpdateTransformQueue { get; }
     }
 }
