@@ -10,17 +10,36 @@ namespace ChargerAstronomyShared.Domain.SpatialIndex
 {
     public sealed class SpatialStarIndex 
     {
-        public ITileIndex TileIndex { get; }
-        public IReadOnlyList<HorizontalStar> Stars => stars;
 
+        public IReadOnlyList<HorizontalStar> Stars => stars;
         readonly List<HorizontalStar> stars;
+
+        /// <summary>
+        /// The index of the tile associated with this instance.
+        /// </summary>
+        public ITileIndex TileIndex { get; }
+
+        /// <summary>
+        /// A dictionary mapping <see cref="TileId"/> to a list of <see cref="HorizontalStar"/> objects contained within that tile.
+        /// </summary>
         readonly Dictionary<TileId, List<HorizontalStar>> starsByTile = new Dictionary<TileId, List<HorizontalStar>>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SpatialStarIndex"/> class using the specified tile index.
+        /// </summary>
+        /// <param name="tileIndex">The tile index used to organize and manage spatial data.</param>
         public SpatialStarIndex(ITileIndex tileIndex)
             : this(tileIndex, Array.Empty<HorizontalStar>())
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SpatialStarIndex"/> class, organizing stars into tiles based on
+        /// their spatial positions.
+        /// </summary>
+        /// <param name="tileIndex">The tile index used to define the spatial tiling structure. Cannot be <see langword="null"/>.</param>
+        /// <param name="inputStars">The collection of stars to be indexed. Cannot be <see langword="null"/>.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="tileIndex"/> or <paramref name="inputStars"/> is <see langword="null"/>.</exception>
         public SpatialStarIndex(ITileIndex tileIndex, IEnumerable<HorizontalStar> inputStars)
         {
             TileIndex = tileIndex ?? throw new ArgumentNullException(nameof(tileIndex));
@@ -85,14 +104,20 @@ namespace ChargerAstronomyShared.Domain.SpatialIndex
         /// <summary>
         /// Returns the <see cref="TileId"/> containing the given star.
         /// </summary>
-        /// <param name="star"></param>
-        /// <returns></returns>
+        /// <param name="star">The given <see cref="HorizontalStar"/>.</param>
+        /// <returns>The tile that contains the given star.</returns>
         public TileId GetTileForStar(HorizontalStar star)
         {
             var dir = ToUnitVector(star);
             return TileIndex.DirectionToTileId(dir);
         }
 
+        /// <summary>
+        /// Retrieves the list of stars located within the specified tile.
+        /// </summary>
+        /// <param name="tile">The identifier of the tile for which to retrieve the stars.</param>
+        /// <returns>A read-only list of <see cref="HorizontalStar"/> within the specified tile.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if the specified <paramref name="tile"/> does not exist in the collection.</exception>
         public IReadOnlyList<HorizontalStar> GetStarsInTile(TileId tile)
         {
             if (!starsByTile.TryGetValue(tile, out var list))
@@ -104,8 +129,8 @@ namespace ChargerAstronomyShared.Domain.SpatialIndex
         /// <summary>
         /// Converts the equatorial coordinates of a star to a unit vector.
         /// </summary>
-        /// <param name="star"></param>
-        /// <returns></returns>
+        /// <param name="star">The given <see cref="HorizontalStar".</param>
+        /// <returns>A 3rd degree vector pointing to the given star.</returns>
         static Vector3 ToUnitVector(HorizontalStar star)
         {
             double raRad = star.RightAscension * Math.PI / 180.0;

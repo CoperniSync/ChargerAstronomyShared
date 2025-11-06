@@ -12,10 +12,23 @@ namespace ChargerAstronomyShared.Domain.Index
 
     public sealed class IcosphereTileIndex : ITileIndex
     {
+
+        /// <inheritdoc/>
         public int TileCount => tiles.Count;
 
         public IReadOnlyList<TileId> Tiles => tiles.AsReadOnly();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IcosphereTileIndex"/> class with a specified number of
+        /// subdivisions.
+        /// </summary>
+        /// <remarks>This constructor generates an icosphere by subdividing a base icosahedron the
+        /// specified number of times.  Each vertex of the resulting icosphere is normalized to lie on the unit sphere. 
+        /// The icosphere is then used to initialize a spatial index, where each triangular face of the icosphere  is
+        /// associated with a unique tile identifier and its corresponding geometry.</remarks>
+        /// <param name="subdivisions">The number of times the base icosahedron is subdivided to create the icosphere.  Must be between 0 and 5,
+        /// inclusive. Higher values result in a finer-grained icosphere.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="subdivisions"/> is less than 0 or greater than 5.</exception>
         public IcosphereTileIndex(int subdivisions = 0)
         {
             if (subdivisions < 0 || subdivisions > 5)
@@ -54,6 +67,7 @@ namespace ChargerAstronomyShared.Domain.Index
             }
         }
 
+        /// <inheritdoc/>
         public TileId DirectionToTileId(Vector3 direction)
         {
             const float EPS = 1e-7f;
@@ -109,12 +123,14 @@ namespace ChargerAstronomyShared.Domain.Index
             throw new InvalidOperationException($"Tile for direction {direction.ToString()} not found");
         }
 
+        /// <inheritdoc/>
         public IEnumerable<TileId> Neigbors(TileId id)
         {
             // This will be a pretty difficult operation to implement, going to skip for now.
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public IEnumerable<TileId> Enumerate()
         {
             foreach( TileId tileId in tiles)
@@ -123,6 +139,7 @@ namespace ChargerAstronomyShared.Domain.Index
             }
         }
 
+        /// <inheritdoc/>
         public IEnumerable<Tuple<TileId, TileGeometry>> EnumerateGeometry()
         {
             foreach (var kvp in tileGeometryMap)
@@ -131,6 +148,7 @@ namespace ChargerAstronomyShared.Domain.Index
             }
         }
 
+        /// <inheritdoc/>
         public double GetTileAlpha(TileId id)
         {
             if (tileGeometryMap.TryGetValue(id, out var geometry))
@@ -140,6 +158,7 @@ namespace ChargerAstronomyShared.Domain.Index
             throw new Exception($"TileGeometry for TileID {id.Index} not found");
         }
 
+        /// <inheritdoc/>
         public Vector3 GetTileCenter(TileId id)
         {
             if(tileGeometryMap.TryGetValue(id, out var geometry))
@@ -149,6 +168,7 @@ namespace ChargerAstronomyShared.Domain.Index
             throw new Exception($"TileGeometry for TileID {id.Index} not found");
         }
 
+        /// <inheritdoc/>
         public TileGeometry GetGeometry(TileId id)
         {
             if(tileGeometryMap.TryGetValue(id, out var geometry))
@@ -158,6 +178,12 @@ namespace ChargerAstronomyShared.Domain.Index
             throw new Exception($"TileGeometry for TileID {id.Index} not found");
         }
 
+        /// <summary>
+        /// Subdivides the faces of the icosphere, increasing its resolution by adding new vertices and faces.
+        /// </summary>
+        /// <remarks>This method refines the current icosphere by splitting each triangular face into four
+        /// smaller triangles. New vertices are added at the midpoints of the edges of the existing faces. The method
+        /// modifies the <c>vertices</c> and <c>faces</c> collections to reflect the updated geometry.</remarks>
         private void SubdivideIcosphere()
         {
             var newFaces = new List<(int a, int b, int c)>(faces.Count * 4);
@@ -198,7 +224,13 @@ namespace ChargerAstronomyShared.Domain.Index
             faces.AddRange(newFaces);
         }
 
-
+        /// <summary>
+        /// Generates the vertices of a regular icosahedron centered at the origin.
+        /// </summary>
+        /// <remarks>The vertices are calculated based on the mathematical construction of a regular
+        /// icosahedron, using the golden ratio (φ). The resulting vertices are returned as a list of <see
+        /// cref="Vector3"/>  objects, where each vertex is represented by its 3D coordinates.</remarks>
+        /// <returns>A <see cref="List{Vector3}"/> containing the 12 vertices of the icosahedron.</returns>
         private static List<Vector3> GetIsocahedronVertices()
         {
             //https://en.wikipedia.org/wiki/Regular_icosahedron#Construction
@@ -227,6 +259,15 @@ namespace ChargerAstronomyShared.Domain.Index
             };
         }
 
+        /// <summary>
+        /// Generates a list of triangular face indices representing the faces of an icosahedron.
+        /// </summary>
+        /// <remarks>Each tuple in the returned list represents a triangular face, where the integers
+        /// correspond to the indices of the vertices that form the triangle. The vertex indices are expected
+        /// to align with the ordering of vertices provided by the <c>GetIsocahedronVertices</c> method.       
+        /// Modifying the vertex ordering may result in incorrect face definitions.</remarks>
+        /// <returns>A list of tuples, where each tuple contains three integers representing the indices of the vertices that
+        /// form a triangular face of the icosahedron.</returns>
         private static List<(int a, int b, int c)> GetIsocahedronIndices()
         {
             // This is built with the vertices in the order given by GetIsocahedronVertices
