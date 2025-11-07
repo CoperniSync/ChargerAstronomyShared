@@ -12,8 +12,10 @@ namespace ChargerAstronomyShared.Domain.Index
 
     public sealed class UVTileIndex : ITileIndex
     {
+        /// <inheritdoc/>
         public int TileCount => tiles.Count;
 
+        /// <inheritdoc/>
         public IReadOnlyList<TileId> Tiles => tiles.AsReadOnly();
 
         public UVTileIndex(int subdivisions = 0)
@@ -54,6 +56,7 @@ namespace ChargerAstronomyShared.Domain.Index
             }
         }
 
+        /// <inheritdoc/>
         public TileId DirectionToTileId(Vector3 direction)
         {
             const float EPS = 1e-7f;
@@ -109,12 +112,14 @@ namespace ChargerAstronomyShared.Domain.Index
             throw new InvalidOperationException($"Tile for direction {direction.ToString()} not found");
         }
 
+        /// <inheritdoc/>
         public IEnumerable<TileId> Neigbors(TileId id)
         {
             // This will be a pretty difficult operation to implement, going to skip for now.
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public IEnumerable<TileId> Enumerate()
         {
             foreach( TileId tileId in tiles)
@@ -123,6 +128,7 @@ namespace ChargerAstronomyShared.Domain.Index
             }
         }
 
+        /// <inheritdoc/>
         public IEnumerable<Tuple<TileId, TileGeometry>> EnumerateGeometry()
         {
             foreach (var kvp in tileGeometryMap)
@@ -131,6 +137,7 @@ namespace ChargerAstronomyShared.Domain.Index
             }
         }
 
+        /// <inheritdoc/>
         public double GetTileAlpha(TileId id)
         {
             if (tileGeometryMap.TryGetValue(id, out var geometry))
@@ -140,6 +147,7 @@ namespace ChargerAstronomyShared.Domain.Index
             throw new Exception($"TileGeometry for TileID {id.Index} not found");
         }
 
+        /// <inheritdoc/>
         public Vector3 GetTileCenter(TileId id)
         {
             if(tileGeometryMap.TryGetValue(id, out var geometry))
@@ -149,6 +157,7 @@ namespace ChargerAstronomyShared.Domain.Index
             throw new Exception($"TileGeometry for TileID {id.Index} not found");
         }
 
+        /// <inheritdoc/>
         public TileGeometry GetGeometry(TileId id)
         {
             if(tileGeometryMap.TryGetValue(id, out var geometry))
@@ -158,6 +167,13 @@ namespace ChargerAstronomyShared.Domain.Index
             throw new Exception($"TileGeometry for TileID {id.Index} not found");
         }
 
+        /// <summary>
+        /// Subdivides the faces of the icosphere, increasing its resolution by adding new vertices and faces.
+        /// </summary>
+        /// <remarks>This method refines the current icosphere by splitting each triangular face into four
+        /// smaller triangles. New vertices are created at the midpoints of the edges of the existing triangles. The
+        /// method modifies the internal vertex and face collections to reflect the higher-resolution
+        /// geometry.</remarks>
         private void SubdivideIcosphere()
         {
             var newFaces = new List<(int a, int b, int c)>(faces.Count * 4);
@@ -198,7 +214,13 @@ namespace ChargerAstronomyShared.Domain.Index
             faces.AddRange(newFaces);
         }
 
-
+        /// <summary>
+        /// Generates the vertices of a regular icosahedron centered at the origin.
+        /// </summary>
+        /// <remarks>The vertices are calculated based on the mathematical definition of a regular
+        /// icosahedron, using the golden ratio (φ). The resulting vertices are returned in a counter-clockwise order
+        /// and can be used for constructing 3D models or performing geometric calculations.</remarks>
+        /// <returns>A list of <see cref="Vector3"/> objects representing the 12 vertices of the icosahedron.</returns>
         private static List<Vector3> GetIsocahedronVertices()
         {
             //https://en.wikipedia.org/wiki/Regular_icosahedron#Construction
@@ -227,6 +249,14 @@ namespace ChargerAstronomyShared.Domain.Index
             };
         }
 
+        /// <summary>
+        /// Generates a list of triangular face indices representing the faces of an icosahedron.
+        /// </summary>
+        /// <remarks>The indices correspond to the vertices of the icosahedron in the order defined by the
+        /// <c>GetIsocahedronVertices</c> method. Modifying the vertex ordering in that method will  invalidate these
+        /// indices.</remarks>
+        /// <returns>A list of tuples, where each tuple contains three integers representing the vertex indices  of a triangular
+        /// face of the icosahedron.</returns>
         private static List<(int a, int b, int c)> GetIsocahedronIndices()
         {
             // This is built with the vertices in the order given by GetIsocahedronVertices
