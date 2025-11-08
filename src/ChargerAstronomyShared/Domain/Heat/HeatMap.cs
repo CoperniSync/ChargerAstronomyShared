@@ -147,11 +147,21 @@ namespace ChargerAstronomyShared.Domain.Heat
             return res;
         }
 
+        /// <summary>
+        /// Retrieves a list of inactive tiles that have heat values above zero.
+        /// </summary>
+        /// <returns>A list of <see cref="TileId"/> objects representing the tiles that have heat values within the specified
+        /// range. The list will be empty if no tiles match the criteria.</returns>
         public IEnumerable<TileId> InactiveTilesAboveZero()
         {
             return TilesAbove(0f).Where(id => !id.active);
         }
 
+        /// <summary>
+        /// Retrieves a list of active tiles that have a heat value of zero.
+        /// </summary>
+        /// <returns>A list of <see cref="TileId"/> objects representing the tiles that have heat values within the specified
+        /// range. The list will be empty if no tiles match the criteria.</returns>
         public IEnumerable<TileId> ActiveTileAtZero()
         {
             return TilesBelow(0f, true).Where(id => id.active);

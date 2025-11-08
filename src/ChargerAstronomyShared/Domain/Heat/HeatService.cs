@@ -13,8 +13,18 @@ namespace ChargerAstronomyShared.Domain.Heat
         public readonly HeatMap heatMap;
         public readonly ITileIndex index;
 
+        /// <summary>
+        /// A temporary collection used to store <see cref="TileId"/> instances during heat calculations.
+        /// </summary>
         private readonly List<TileId> scratch = new List<TileId>(capacity: 256);
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HeatService"/> class with the specified heat map and tile
+        /// index.
+        /// </summary>
+        /// <param name="heatMap">The heat map used to manage and analyze heat data.</param>
+        /// <param name="index">The tile index used for spatial data organization and lookup.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="heatMap"/> or <paramref name="index"/> is <see langword="null"/>.</exception>
         public HeatService(HeatMap heatMap, ITileIndex index)
         {
             this.heatMap = heatMap ?? throw new ArgumentNullException(nameof(heatMap));
