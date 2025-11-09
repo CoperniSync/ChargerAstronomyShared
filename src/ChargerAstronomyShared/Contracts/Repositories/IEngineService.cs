@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ChargerAstronomyShared.Contracts.Repositories
 {
-    public interface IEngineService
+    public interface IEngineService <T> where T : IHorizontal
     {
 
         /// <summary>
@@ -28,22 +28,8 @@ namespace ChargerAstronomyShared.Contracts.Repositories
         /// <returns>A task that represents the asynchronous operation of stepping the simulation.</returns>
         public Task Step(float deltaTime, Vector3 cameraDirection, float horizontalFOV);
 
-        /// <summary>
-        /// Gets the queue used to manage tile activation requests.
-        /// </summary>
-        /// <remarks>The queue is implemented as a <see cref="BlockingCollection{T}"/>, ensuring
-        /// thread-safe access and  providing blocking and bounding capabilities. Consumers can take items from the
-        /// queue, and producers  can add items to it.</remarks>
-        public BlockingCollection<TileId> ActivationQueue { get; }
-
-        /// <summary>
-        /// Gets the queue of tiles awaiting deactivation.
-        /// </summary>
-        public BlockingCollection<TileId> DeactivationQueue { get; }
-
-        /// <summary>
-        /// Update queue.
-        /// </summary>
-        public BlockingCollection<TileId> UpdateTransformQueue { get; }
+        public BlockingCollection<T> ActivationQueue { get; }
+        public BlockingCollection<T> DeactivationQueue { get; }
+        public BlockingCollection<T> UpdateTransformQueue { get; }
     }
 }
