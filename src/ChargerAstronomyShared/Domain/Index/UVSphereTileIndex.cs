@@ -9,6 +9,8 @@ namespace ChargerAstronomyShared.Domain.Index
 {
     public class UVSphereTileIndex : ITileIndex
     {
+        // Not yet implemented
+
         public int TileCount => throw new NotImplementedException();
 
         public IReadOnlyList<TileId> Tiles => throw new NotImplementedException();

@@ -16,6 +16,10 @@ namespace ChargerAstronomyShared.Domain.SpatialIndex
         readonly List<T> stars;
         readonly Dictionary<TileId, List<T>> starsByTile = new Dictionary<TileId, List<T>>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SpatialStarIndex"/> class using the specified tile index.
+        /// </summary>
+        /// <param name="tileIndex">The tile index used to organize and manage spatial data.</param>
         public SpatialStarIndex(ITileIndex tileIndex)
             : this(tileIndex, Array.Empty<T>())
         {

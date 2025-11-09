@@ -11,10 +11,31 @@ namespace ChargerAstronomyShared.Domain.Heat
     /// </summary>
     public sealed class HeatConfig
     {
+
+        /// <summary>
+        /// The rate at which heat decays per second.
+        /// </summary>
         public float DecayPerSecond { get; set; } = 0.05f;
+
+        /// <summary>
+        /// The minimum heat value.
+        /// </summary>
         public float ClampMin { get; set; } = 0f;
+
+        /// <summary>
+        /// The maximum heat value.
+        /// </summary>
         public float ClampMax { get; set;  } = 1f;
-        public float Epsilon { get; } = 1e-6f; // no need to have setters for this
+
+        /// <summary>
+        /// Gets the small positive value used as a tolerance for floating-point comparisons.
+        /// </summary>
+        /// <remarks>No need for setters, this is a constant.</remarks>
+        public float Epsilon { get; } = 1e-6f;
+
+        /// <summary>
+        /// Indicates whether area weighting is applied in calculations.
+        /// </summary>
         public bool AreaWeighted { get; set;  } = true;    
     }
 }
