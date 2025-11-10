@@ -78,14 +78,14 @@ namespace ChargerAstronomyShared.Domain.Index
                 var v2 = tileGeometry.Vertices[1];
                 var v3 = tileGeometry.Vertices[2];
                 
-                var n = tileGeometry.Center;
-
+                var n = Vector3.Normalize(Vector3.Cross(v2 - v1, v3 - v1));
+                float d = Vector3.Dot(n, v1);
                 // from (0 + t * d - p0) . n = 0
 
                 float denom = Vector3.Dot(n, direction);
-                if (denom <= EPS) continue; 
+                if (MathF.Abs(denom) < EPS) continue; 
 
-                float t = Vector3.Dot(n, v1) / denom;
+                float t = d / denom;
                 var p = direction * t;
 
                 // cramer's rule wont work for points in worldspace
