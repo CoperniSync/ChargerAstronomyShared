@@ -54,9 +54,9 @@ namespace ChargerAstronomyShared.Domain.Index
             for (int i = 0; i < faces.Count; i++)
             {
                 var face = faces[i];
-                var v1 = vertices[face.a - 1]; // -1 because our indices are 1-based
-                var v2 = vertices[face.b - 1];
-                var v3 = vertices[face.c - 1];
+                var v1 = vertices[face.a]; // -1 because our indices are 1-based
+                var v2 = vertices[face.b];
+                var v3 = vertices[face.c];
 
                 var center = Vector3.Normalize((v1 + v2 + v3) / 3);
                 var alpha = Math.Acos(Vector3.Dot(center, v2)); 
