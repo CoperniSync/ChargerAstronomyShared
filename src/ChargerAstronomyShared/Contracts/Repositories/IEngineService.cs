@@ -1,6 +1,7 @@
 ﻿using ChargerAstronomyShared.Contracts.Models;
 using ChargerAstronomyShared.Domain.Heat;
 using ChargerAstronomyShared.Domain.Index;
+using ChargerAstronomyShared.Domain.SpatialIndex;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -27,6 +28,9 @@ namespace ChargerAstronomyShared.Contracts.Repositories
         /// <param name="horizontalFOV">The horizontal field of view, in degrees, used to determine the visible area. Must be a positive value.</param>
         /// <returns>A task that represents the asynchronous operation of stepping the simulation.</returns>
         public Task Step(float deltaTime, Vector3 cameraDirection, float horizontalFOV);
+
+        public HeatService HeatService { get; }
+        public SpatialStarIndex<T> SpatialStarIndex { get; }
 
         public BlockingCollection<T> ActivationQueue { get; }
         public BlockingCollection<T> DeactivationQueue { get; }
