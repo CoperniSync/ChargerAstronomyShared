@@ -33,15 +33,18 @@ namespace ChargerAstronomyShared.Domain
 
         /// <summary>The real-valued second in the half-open range [0, 60).</summary>
         public double second;
-
+        
         public CalendarDateTime(int year, int month, int day, int hour, int minute, double second)
         {
+            var offset = TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow).TotalHours;
             this.year = year;
             this.month = month;
             this.day = day;
-            this.hour = hour;
+            this.hour = hour - (int)offset;
             this.minute = minute;
             this.second = second;
+            
+
         }
 
         /// <summary>Convert a J2000 day value to a Gregorian calendar date.</summary>
@@ -50,7 +53,6 @@ namespace ChargerAstronomyShared.Domain
         {
             // Adapted from the NOVAS C 3.1 function cal_date().
             // Convert fractional days since J2000 into Gregorian calendar date/time.
-
             double djd = ut + 2451545.5;
             long jd = (long)Math.Floor(djd);
             double x = 24.0 * (djd % 1.0);
