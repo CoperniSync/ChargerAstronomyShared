@@ -8,5 +8,9 @@ namespace ChargerAstronomyShared.Contracts.Models
     public interface IHorizontal
     {
         public HorizontalBody HorizontalBody { get; }
+
+        public void SetState(bool visible);
+
+        public void UpdatePosition();
     }
 }
