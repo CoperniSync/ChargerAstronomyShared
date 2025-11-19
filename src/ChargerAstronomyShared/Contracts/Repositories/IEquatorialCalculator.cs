@@ -44,5 +44,11 @@ namespace ChargerAstronomyShared.Contracts.Repositories
         /// <param name="newTime">The new universal time.</param>
         /// <param name="newLocation">The new location for the <see cref="Observer"/> to update to.</param>
         public void UpdateTimeAndLocation(CalendarDateTime newTime, Observer newLocation);
+
+        public void UpdatePositionOf(HorizontalPlanet planet);
+        public void UpdatePositionOf(HorizontalMoon moon);
+        public void UpdatePositionOf(HorizontalSun sun);
+
+
     }
 }
