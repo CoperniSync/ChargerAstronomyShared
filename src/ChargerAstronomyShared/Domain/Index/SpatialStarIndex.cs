@@ -40,6 +40,15 @@ namespace ChargerAstronomyShared.Domain.SpatialIndex
             }
         }
 
+        public void SortAllTilesByMagnitude()
+        {
+            foreach (var kvp in starsByTile)
+            {
+                kvp.Value.Sort((a, b) =>
+                    a.HorizontalBody.Magnitude.CompareTo(b.HorizontalBody.Magnitude));
+            }
+        }
+
         /// <summary>
         /// Adds a new star to the collection and associates it with the appropriate tile.
         /// </summary>
@@ -59,6 +68,10 @@ namespace ChargerAstronomyShared.Domain.SpatialIndex
                 starsByTile[tile] = new List<T>();
 
             starsByTile[tile].Add(newStar);
+
+            // sort by magnitude
+            starsByTile[tile].Sort((a, b) =>
+                a.HorizontalBody.Magnitude.CompareTo(b.HorizontalBody.Magnitude));
         }
 
         /// <summary>
@@ -113,7 +126,7 @@ namespace ChargerAstronomyShared.Domain.SpatialIndex
         static Vector3 ToUnitVector(T star)
         {
             var horizontal = star.HorizontalBody;
-            double raRad = horizontal.RightAscension * Math.PI / 180.0;
+            double raRad = horizontal.RightAscension * 15.0f *Math.PI / 180.0;
             double decRad = horizontal.Declination * Math.PI / 180.0;
 
             float x = (float)(Math.Cos(decRad) * Math.Cos(raRad));

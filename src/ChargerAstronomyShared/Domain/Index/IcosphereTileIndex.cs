@@ -70,61 +70,49 @@ namespace ChargerAstronomyShared.Domain.Index
         /// <inheritdoc/>
         public TileId DirectionToTileId(Vector3 direction)
         {
-            const float EPS = 1e-7f;
+            direction = Vector3.Normalize(direction);
+            float eps = 1e-6f;
 
-            foreach ((TileId tileId, TileGeometry tileGeometry) in EnumerateGeometry())
+            foreach (var tuple in EnumerateGeometry())
             {
-                var v1 = tileGeometry.Vertices[0];
-                var v2 = tileGeometry.Vertices[1];
-                var v3 = tileGeometry.Vertices[2];
-                
-                var n = Vector3.Normalize(Vector3.Cross(v2 - v1, v3 - v1));
-                
-                if (Vector3.Dot(n, tileGeometry.Center) < 0) n = -n;
-                
-                float d = Vector3.Dot(n, v1);
-                
-                float denom = Vector3.Dot(n, direction);
-                if (denom <= EPS) continue;
-                
-                float t = d / denom;
-                if (t <= EPS) continue;
+                var tileId = tuple.Item1;
+                var geometry = tuple.Item2;
 
-                var p = direction * t;
+                var v1 = geometry.Vertices[0];
+                var v2 = geometry.Vertices[1];
+                var v3 = geometry.Vertices[2];
 
-                // cramer's rule wont work for points in worldspace
-                // so we form a basis with u,v on the plane of the triangle and n normal to it
+                var cross1 = Vector3.Cross(v1, v2);
+                var cross2 = Vector3.Cross(v2, v3);
+                var cross3 = Vector3.Cross(v3, v1);
 
-                float dot = MathF.Abs(Vector3.Dot(n, Vector3.UnitY));
-                Vector3 helper = dot < 1 - EPS ? Vector3.UnitY : Vector3.UnitZ;
+                float d1 = Vector3.Dot(cross1, direction);
+                float d2 = Vector3.Dot(cross2, direction);
+                float d3 = Vector3.Dot(cross3, direction);
 
-                var u = Vector3.Normalize(Vector3.Cross(helper, n));
-                var v = Vector3.Cross(n, u);
+                // Only check one winding direction
+                bool inside = d1 >= -eps && d2 >= -eps && d3 >= -eps;
 
-                v1 = new Vector3(Vector3.Dot(v1, u), Vector3.Dot(v1, v), 0);
-                v2 = new Vector3(Vector3.Dot(v2, u), Vector3.Dot(v2, v), 0);
-                v3 = new Vector3(Vector3.Dot(v3, u), Vector3.Dot(v3, v), 0);
-                p = new Vector3(Vector3.Dot(p, u), Vector3.Dot(p, v), 0);
-
-                // just cramer's rule
-
-                float D = (v1.X - v3.X) * (v2.Y - v3.Y) - (v2.X - v3.X) * (v1.Y - v3.Y);
-                if (MathF.Abs(D) < EPS)
-                    continue; 
-
-                float a = ((p.X - v3.X) * (v2.Y - v3.Y) - (v2.X - v3.X) * (p.Y - v3.Y)) / D;
-                float b = ((v1.X - v3.X) * (p.Y - v3.Y) - (p.X - v3.X) * (v1.Y - v3.Y)) / D;
-                float c = 1f - a - b;
-
-                // using barycentric coordinates we know if a,b,c > 0 
-                // then our point lies within the triangle 
-
-                if (a >= -EPS && b >= -EPS && c >= -EPS)
+                if (inside)
+                {
                     return tileId;
+                }
             }
 
-            // This should never happen unless the sphere is not fully covered by tiles
-            throw new InvalidOperationException($"Tile for direction {direction.ToString()} not found");
+            TileId bestTile = null;
+            float bestDot = -2f;
+
+            foreach (var tuple in EnumerateGeometry())
+            {
+                float dot = Vector3.Dot(tuple.Item2.Center, direction);
+                if (dot > bestDot)
+                {
+                    bestDot = dot;
+                    bestTile = tuple.Item1;
+                }
+            }
+
+            return bestTile;
         }
 
         /// <inheritdoc/>
