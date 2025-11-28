@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace ChargerAstronomyShared.Domain.Equatorial
@@ -8,7 +9,12 @@ namespace ChargerAstronomyShared.Domain.Equatorial
 
     public abstract class EquatorialCelestialBody
     {
-        private double distance;
+        public EquatorialCelestialBody(BodyType body)
+        {
+            this.bodyType = body;
+        }
+
+        private BodyType bodyType;
         /// <summary>
         /// Measured in decimal hours from the point in the sky where the sun crosses the celestial equator during the spring equinox of 2000
         /// </summary>
@@ -25,5 +31,7 @@ namespace ChargerAstronomyShared.Domain.Equatorial
         /// Distance in light years from the earth.
         /// </summary>
         public double Distance { get; set; }
+
+        public BodyType BodyType => bodyType;
     }
 }

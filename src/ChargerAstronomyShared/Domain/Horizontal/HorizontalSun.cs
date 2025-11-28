@@ -1,0 +1,24 @@
+﻿using System;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using ChargerAstronomyShared.Domain.Equatorial;
+using System.Diagnostics.CodeAnalysis;
+
+namespace ChargerAstronomyShared.Domain.Horizontal
+{
+    /// <summary>
+    /// Represents the Sun in horizontal coordinate form.
+    /// </summary>
+    public class HorizontalSun : HorizontalBody
+    {
+        /// <summary>
+        /// Creates a new instance using a celestial body to contain basic information
+        /// </summary>
+        /// <param name="body">A new <c>HorizontalSun</c> object.</param>
+        public HorizontalSun() : base(BodyType.Sun)
+        {
+        }
+    }
+}
