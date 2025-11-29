@@ -8,7 +8,7 @@ using ChargerAstronomyShared.Domain.Index;
 
 namespace ChargerAstronomyShared.Domain.SpatialIndex
 {
-    public sealed class SpatialStarIndex<T> where T : IHorizontal
+    public sealed class SpatialStarIndex<T> where T : IHorizontal 
     {
         public ITileIndex TileIndex { get; }
         public IReadOnlyList<T> Stars => stars;
