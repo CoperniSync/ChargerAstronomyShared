@@ -36,17 +36,12 @@ namespace ChargerAstronomyShared.Domain
 
         public CalendarDateTime(int year, int month, int day, int hour, int minute, double second)
         {
-            var local = new DateTime(year, month, day, hour, minute, 0, DateTimeKind.Local)
-                            .AddSeconds(second);
-
-            var utc = local.ToUniversalTime();
-
-            this.year = utc.Year;
-            this.month = utc.Month;
-            this.day = utc.Day;
-            this.hour = utc.Hour;
-            this.minute = utc.Minute;
-            this.second = utc.Second + utc.Millisecond / 1000.0;
+            this.year = year;
+            this.month = month;
+            this.day = day;
+            this.hour = hour;
+            this.minute = minute;
+            this.second = second;
         }
 
 
