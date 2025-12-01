@@ -23,6 +23,11 @@ namespace ChargerAstronomyShared.Domain.Heat
         public float ClampMin { get; set; } = 0f;
 
         /// <summary>
+        //
+        /// </summary>
+        public Boolean UseInstantDecay { get; set; } = true;
+
+        /// <summary>
         /// The maximum heat value.
         /// </summary>
         public float ClampMax { get; set;  } = 1f;

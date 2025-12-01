@@ -33,19 +33,17 @@ namespace ChargerAstronomyShared.Domain
 
         /// <summary>The real-valued second in the half-open range [0, 60).</summary>
         public double second;
-        
+
         public CalendarDateTime(int year, int month, int day, int hour, int minute, double second)
         {
-            var offset = TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow).TotalHours;
             this.year = year;
             this.month = month;
             this.day = day;
-            this.hour = hour - (int)offset;
+            this.hour = hour;
             this.minute = minute;
             this.second = second;
-            
-
         }
+
 
         /// <summary>Convert a J2000 day value to a Gregorian calendar date.</summary>
         /// <param name="ut">The real-valued number of days since the J2000 epoch.</param>

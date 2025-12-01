@@ -2,38 +2,48 @@
 using ChargerAstronomyShared.Domain.Heat;
 using ChargerAstronomyShared.Domain.Index;
 using ChargerAstronomyShared.Domain.SpatialIndex;
-using System;
+using ChargerAstronomyShared.Contracts.Streaming;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ChargerAstronomyShared.Contracts.Repositories
 {
-    public interface IEngineService <T> where T : IHorizontal
+    public interface IEngineService<T> where T : IHorizontal
     {
 
-        /// <summary>
-        /// Starts and initializes the engine services for the application.
-        /// </summary>
-        /// <returns>An instance of <see cref="IEquatorialCalculator"/> representing the initialized service.</returns>
         IEquatorialCalculator StartServices();
 
+
+        void Step(float deltaTime, float camX, float camY, float camZ, float horizontalFOV, float magnitudeThreshold, float speedMult);
+
+        void PlaceStars(); // for initialization purposes
+
+
         /// <summary>
-        /// Advances the simulation by a single step, updating the state based on the elapsed time and camera direction.
+        /// Updates a star's horiziontal position
         /// </summary>
-        /// <param name="deltaTime">The time, in seconds, that has elapsed since the last step. Must be greater than zero.</param>
-        /// <param name="cameraDirection">The direction the camera is facing, represented as a 3D vector.</param>
-        /// <param name="horizontalFOV">The horizontal field of view, in degrees, used to determine the visible area. Must be a positive value.</param>
-        /// <returns>A task that represents the asynchronous operation of stepping the simulation.</returns>
-        public Task Step(float deltaTime, Vector3 cameraDirection, float horizontalFOV);
+        /// <param name="star"> The star to be updated </param>
+        void ForceStarUpdate(T star);
 
-        public HeatService HeatService { get; }
-        public SpatialStarIndex<T> SpatialStarIndex { get; }
+        EngineStats GetStats();
 
-        public BlockingCollection<T> ActivationQueue { get; }
-        public BlockingCollection<T> DeactivationQueue { get; }
-        public BlockingCollection<T> UpdateTransformQueue { get; }
+        /// <summary>
+        /// The spatial index containing all stars organized by tile.
+        /// </summary>
+        SpatialStarIndex<T> SpatialStarIndex { get; }
+
+        /// <summary>
+        /// Queue for stars that need to be activated (made visible).
+        /// </summary>
+        BlockingCollection<T> ActivationQueue { get; }
+
+        /// <summary>
+        /// Queue for stars that need to be deactivated (made invisible).
+        /// </summary>
+        BlockingCollection<T> DeactivationQueue { get; }
+
+        /// <summary>
+        /// Queue for stars that need their transforms updated.
+        /// </summary>
+        BlockingCollection<T> UpdateTransformQueue { get; }
     }
 }
