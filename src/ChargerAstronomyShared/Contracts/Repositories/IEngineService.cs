@@ -17,6 +17,13 @@ namespace ChargerAstronomyShared.Contracts.Repositories
 
         void PlaceStars(); // for initialization purposes
 
+
+        /// <summary>
+        /// Updates a star's horiziontal position
+        /// </summary>
+        /// <param name="star"> The star to be updated </param>
+        void ForceStarUpdate(T star);
+
         EngineStats GetStats();
 
         /// <summary>
