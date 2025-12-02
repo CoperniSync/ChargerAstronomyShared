@@ -6,6 +6,9 @@ namespace ChargerAstronomyShared.Domain.Equatorial
 {
     //using ChargerAstronomyShared.Domain.Common;
 
+    /// <summary>
+    /// A star represented in equatorial coordinates.
+    /// </summary>
     public sealed class EquatorialStar : EquatorialCelestialBody
     {
         public EquatorialStar() : base(BodyType.Star) { }

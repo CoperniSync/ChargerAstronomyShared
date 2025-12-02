@@ -10,6 +10,9 @@ namespace ChargerAstronomyShared.Contracts.Repositories
     using ChargerAstronomyShared.Domain.Equatorial;
     using System.Threading;
 
+    /// <summary>
+    /// Repository for accessing <see cref="EquatorialStar"/> data.
+    /// </summary>
     public interface IStarRepository
     {
         /// <summary>

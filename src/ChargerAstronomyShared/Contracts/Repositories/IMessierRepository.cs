@@ -6,6 +6,9 @@ namespace ChargerAstronomyShared.Contracts.Repositories
 {
     using ChargerAstronomyShared.Domain.Equatorial;
 
+    /// <summary>
+    /// Repository for accessing Messier Objects.
+    /// </summary>
     public interface IMessierRepository
     {
         /// <summary>

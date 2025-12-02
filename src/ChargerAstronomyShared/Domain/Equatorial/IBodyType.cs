@@ -4,6 +4,10 @@ using System.Text;
 
 namespace ChargerAstronomyShared.Domain.Equatorial
 {
+
+    /// <summary>
+    /// Interface for the <see cref="BodyType"/> class.
+    /// </summary>
     public interface IBodyType
     {
 
