@@ -7,6 +7,9 @@ namespace ChargerAstronomyShared.Domain.Index
     using ChargerAstronomyShared.Contracts.Models;
     using ChargerAstronomyShared.Domain.Geometry;
 
+    /// <summary>
+    /// A tile index that partitions tiles into a UV sphere.
+    /// </summary>
     public sealed class UVSphereTileIndex : ITileIndex
     {
         private readonly int raSteps;
@@ -14,10 +17,18 @@ namespace ChargerAstronomyShared.Domain.Index
         private readonly List<TileId> tiles = new List<TileId>();
         private readonly Dictionary<TileId, TileGeometry> tileGeometryMap = new Dictionary<TileId, TileGeometry>();
 
+        /// <inheritdoc/>
         public int TileCount => tiles.Count;
 
+        /// <inheritdoc/>
         public IReadOnlyList<TileId> Tiles => tiles.AsReadOnly();
 
+        /// <summary>
+        /// Creates a new UVSphereTileIndex with specified RA and Dec steps.
+        /// </summary>
+        /// <param name="raSteps">The amount of right ascension (in degrees) per tile.</param>
+        /// <param name="decSteps">The amount of declination (in degrees) per tile.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if there are less than 2 RA or Dec steps</exception>
         public UVSphereTileIndex(int raSteps = 24, int decSteps = 18)
         {
             if (raSteps < 2)
@@ -31,6 +42,9 @@ namespace ChargerAstronomyShared.Domain.Index
             BuildTiles();
         }
 
+        /// <summary>
+        /// Builds the tiles for the UV sphere.
+        /// </summary>
         private void BuildTiles()
         {
             double raStep = 2.0 * Math.PI / raSteps; 
@@ -71,6 +85,12 @@ namespace ChargerAstronomyShared.Domain.Index
             }
         }
 
+        /// <summary>
+        /// Converts spherical coordinates (RA, Dec) to Cartesian coordinates (X, Y, Z).
+        /// </summary>
+        /// <param name="ra">Right ascension.</param>
+        /// <param name="dec">Declination.</param>
+        /// <returns>Cartesian coordinates (X, Y, Z)</returns>
         private static Vector3 SphericalToCartesian(double ra, double dec)
         {
             float x = (float)(Math.Cos(dec) * Math.Cos(ra));
@@ -79,7 +99,15 @@ namespace ChargerAstronomyShared.Domain.Index
             return new Vector3(x, y, z);
         }
 
-
+        /// <summary>
+        /// Calculates the alpha angle for a tile based on its corners and center.
+        /// </summary>
+        /// <param name="raMin">The minimum right ascension value.</param>
+        /// <param name="raMax">The maximum right ascension value.</param>
+        /// <param name="decMin">The minimum declination value.</param>
+        /// <param name="decMax">The maximum declination value.</param>
+        /// <param name="center">The center of the tile.</param>
+        /// <returns></returns>
         private static double CalculateTileAlpha(double raMin, double raMax, double decMin, double decMax, Vector3 center)
         {
             var corners = new[]
@@ -102,6 +130,7 @@ namespace ChargerAstronomyShared.Domain.Index
             return maxAngle;
         }
 
+        /// <inheritdoc/>
         public TileId DirectionToTileId(Vector3 direction)
         {
             direction = Vector3.Normalize(direction);
@@ -124,6 +153,7 @@ namespace ChargerAstronomyShared.Domain.Index
             return tiles[tileIndex];
         }
 
+        /// <inheritdoc/>
         public IEnumerable<TileId> Neigbors(TileId id)
         {
             int index = id.Index;
@@ -154,11 +184,13 @@ namespace ChargerAstronomyShared.Domain.Index
             return neighbors;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<TileId> Enumerate()
         {
             return tiles;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<Tuple<TileId, TileGeometry>> EnumerateGeometry()
         {
             foreach (var kvp in tileGeometryMap)
@@ -167,6 +199,7 @@ namespace ChargerAstronomyShared.Domain.Index
             }
         }
 
+        /// <inheritdoc/>
         public double GetTileAlpha(TileId id)
         {
             if (tileGeometryMap.TryGetValue(id, out var geometry))
@@ -176,6 +209,7 @@ namespace ChargerAstronomyShared.Domain.Index
             throw new Exception($"TileGeometry for TileID {id.Index} not found");
         }
 
+        /// <inheritdoc/>
         public Vector3 GetTileCenter(TileId id)
         {
             if (tileGeometryMap.TryGetValue(id, out var geometry))
@@ -185,6 +219,7 @@ namespace ChargerAstronomyShared.Domain.Index
             throw new Exception($"TileGeometry for TileID {id.Index} not found");
         }
 
+        /// <inheritdoc/>
         public TileGeometry GetGeometry(TileId id)
         {
             if (tileGeometryMap.TryGetValue(id, out var geometry))

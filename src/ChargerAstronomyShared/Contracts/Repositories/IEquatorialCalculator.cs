@@ -45,10 +45,23 @@ namespace ChargerAstronomyShared.Contracts.Repositories
         /// <param name="newLocation">The new location for the <see cref="Observer"/> to update to.</param>
         public void UpdateTimeAndLocation(CalendarDateTime newTime, Observer newLocation);
 
+        /// <summary>
+        /// Updates the position of a planet based on the current time and <see cref="Observer"/>.
+        /// </summary>
+        /// <param name="moon">A planet.</param>
+        /// <exception cref="ArgumentException">Thrown if the <paramref name="planet"/> name is not recognized in the internal collection of known planets.</exception>
         public void UpdatePositionOf(HorizontalPlanet planet);
+
+        /// <summary>
+        /// Updates the position of the moon based on the current time and <see cref="Observer"/>.
+        /// </summary>
+        /// <param name="moon">The Moon.</param>
         public void UpdatePositionOf(HorizontalMoon moon);
+
+        /// <summary>
+        /// Updates the position of the Sun based on the current time and <see cref="Observer"/>.
+        /// </summary>
+        /// <param name="moon">The Sun.</param>
         public void UpdatePositionOf(HorizontalSun sun);
-
-
     }
 }

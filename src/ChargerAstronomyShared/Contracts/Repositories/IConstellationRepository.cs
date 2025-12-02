@@ -6,6 +6,9 @@ namespace ChargerAstronomyShared.Contracts.Repositories
 {
     using ChargerAstronomyShared.Domain.Equatorial;
 
+    /// <summary>
+    /// Repository for accessing <see cref="Constellation"/> data.
+    /// </summary>
     public interface IConstellationRepository
     {
         /// <summary>

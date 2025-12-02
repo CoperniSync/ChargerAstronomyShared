@@ -8,18 +8,29 @@ using ChargerAstronomyShared.Domain.Index;
 
 namespace ChargerAstronomyShared.Domain.SpatialIndex
 {
-    public sealed class SpatialStarIndex<T> where T : IHorizontal 
+    /// <summary>
+    /// Represents a spatial index for organizing and retrieving stars based on their positions in tiles.
+    /// </summary>
+    /// <remarks>This class provides efficient spatial indexing for stars by associating them with tiles
+    /// defined by an <see cref="ITileIndex"/>. Stars can be added individually or in bulk, and their positions are used
+    /// to determine the corresponding tile for indexing. The index supports retrieving all stars within a specific tile
+    /// and ensures that each star is correctly associated with its corresponding tile.</remarks>
+    /// <typeparam name="T">The type of stars to be indexed. Must implement <see cref="IHorizontal"/> to provide positional data.</typeparam>
+    public sealed class SpatialStarIndex<T> where T : IHorizontal
     {
+        /// <summary>
+        /// The TileIndex used for spatial indexing.
+        /// </summary>
         public ITileIndex TileIndex { get; }
+
+        /// <summary>
+        /// A read-only list of all stars used in the index.
+        /// </summary>
         public IReadOnlyList<T> Stars => stars;
 
         readonly List<T> stars;
         readonly Dictionary<TileId, List<T>> starsByTile = new Dictionary<TileId, List<T>>();
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SpatialStarIndex"/> class using the specified tile index.
-        /// </summary>
-        /// <param name="tileIndex">The tile index used to organize and manage spatial data.</param>
+        
         public SpatialStarIndex(ITileIndex tileIndex)
             : this(tileIndex, Array.Empty<T>())
         {

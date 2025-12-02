@@ -7,6 +7,9 @@ namespace ChargerAstronomyShared.Domain.Equatorial
 {
     //using ChargerAstronomyShared.Domain.Common;
 
+    /// <summary>
+    /// A celestial body represented in equatorial coordinates.
+    /// </summary>
     public abstract class EquatorialCelestialBody
     {
         public EquatorialCelestialBody(BodyType body)

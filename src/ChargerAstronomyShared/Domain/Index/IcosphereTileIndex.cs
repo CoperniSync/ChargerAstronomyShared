@@ -10,6 +10,9 @@ namespace ChargerAstronomyShared.Domain.Index
     using ChargerAstronomyShared.Contracts.Models;
     using ChargerAstronomyShared.Domain.Geometry;
 
+    /// <summary>
+    /// A tile index that partitions tiles into an icosphere.
+    /// </summary>
     public sealed class IcosphereTileIndex : ITileIndex
     {
 

@@ -8,6 +8,9 @@ namespace ChargerAstronomyShared.Domain.Index
     using ChargerAstronomyShared.Contracts.Models;
     using ChargerAstronomyShared.Domain.Geometry;
 
+    /// <summary>
+    /// A tile index used for spatial queries.
+    /// </summary>
     public interface ITileIndex
     {
 

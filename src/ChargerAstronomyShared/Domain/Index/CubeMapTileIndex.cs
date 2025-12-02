@@ -7,14 +7,19 @@ namespace ChargerAstronomyShared.Domain.Index
     using ChargerAstronomyShared.Contracts.Models;
     using ChargerAstronomyShared.Domain.Geometry;
 
+    /// <summary>
+    /// A tile index that partitions tiles into a cube.
+    /// </summary>
     public sealed class CubeMapTileIndex : ITileIndex
     {
         private readonly int subdivisionsPerFace;
         private readonly List<TileId> tiles = new List<TileId>();
         private readonly Dictionary<TileId, TileGeometry> tileGeometryMap = new Dictionary<TileId, TileGeometry>();
 
+        /// <inheritdoc/>
         public int TileCount => tiles.Count;
 
+        /// <inheritdoc/>
         public IReadOnlyList<TileId> Tiles => tiles.AsReadOnly();
 
         private enum CubeFace
@@ -27,6 +32,11 @@ namespace ChargerAstronomyShared.Domain.Index
             NegativeZ = 5
         }
 
+        /// <summary>
+        /// Creates a new CubeMapTileIndex with a specified number of subdivisions per face.
+        /// </summary>
+        /// <param name="subdivisionsPerFace">the amount of subdivisions per face.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Must have at least 1 subdivision per face.</exception>
         public CubeMapTileIndex(int subdivisionsPerFace = 4)
         {
             if (subdivisionsPerFace < 1)
@@ -36,6 +46,9 @@ namespace ChargerAstronomyShared.Domain.Index
             BuildTiles();
         }
 
+        /// <summary>
+        /// Builds the tiles for the cube map.
+        /// </summary>
         private void BuildTiles()
         {
             int tileIndex = 0;
@@ -76,6 +89,14 @@ namespace ChargerAstronomyShared.Domain.Index
             }
         }
 
+        /// <summary>
+        /// Converts cube face and UV coordinates to a 3D vector.
+        /// </summary>
+        /// <param name="face">A face of the cube.</param>
+        /// <param name="u">The first vector.</param>
+        /// <param name="v">The second vector.</param>
+        /// <returns>A 3D vector.</returns>
+        /// <exception cref="ArgumentException">Thrown if an invalid <see cref="CubeFace"/> is provided.</exception>
         private static Vector3 CubeFaceUVToVector(CubeFace face, float u, float v)
         {
             return face switch
@@ -90,6 +111,11 @@ namespace ChargerAstronomyShared.Domain.Index
             };
         }
 
+        /// <summary>
+        /// Converts a 3D vector to cube face and UV coordinates.
+        /// </summary>
+        /// <param name="direction">A 3D vector.</param>
+        /// <returns>A <see cref="CubeFace"/> and UV vectors.</returns>
         private static (CubeFace face, float u, float v) VectorToCubeFaceUV(Vector3 direction)
         {
             float absX = Math.Abs(direction.X);
@@ -152,6 +178,12 @@ namespace ChargerAstronomyShared.Domain.Index
             return (face, u, v);
         }
 
+        /// <summary>
+        /// Calculates the alpha angle for a tile given its center and vertices.
+        /// </summary>
+        /// <param name="center">The center of the tile.</param>
+        /// <param name="vertices">The vertices of the tile.</param>
+        /// <returns>The alpha angle of the tile.</returns>
         private static double CalculateTileAlpha(Vector3 center, List<Vector3> vertices)
         {
             double maxAngle = 0.0;
@@ -165,6 +197,7 @@ namespace ChargerAstronomyShared.Domain.Index
             return maxAngle;
         }
 
+        /// <inheritdoc/>
         public TileId DirectionToTileId(Vector3 direction)
         {
             direction = Vector3.Normalize(direction);
@@ -189,11 +222,13 @@ namespace ChargerAstronomyShared.Domain.Index
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public IEnumerable<TileId> Enumerate()
         {
             return tiles;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<Tuple<TileId, TileGeometry>> EnumerateGeometry()
         {
             foreach (var kvp in tileGeometryMap)
@@ -202,6 +237,7 @@ namespace ChargerAstronomyShared.Domain.Index
             }
         }
 
+        /// <inheritdoc/>
         public double GetTileAlpha(TileId id)
         {
             if (tileGeometryMap.TryGetValue(id, out var geometry))
@@ -211,6 +247,7 @@ namespace ChargerAstronomyShared.Domain.Index
             throw new Exception($"TileGeometry for TileID {id.Index} not found");
         }
 
+        /// <inheritdoc/>
         public Vector3 GetTileCenter(TileId id)
         {
             if (tileGeometryMap.TryGetValue(id, out var geometry))
@@ -220,6 +257,7 @@ namespace ChargerAstronomyShared.Domain.Index
             throw new Exception($"TileGeometry for TileID {id.Index} not found");
         }
 
+        /// <inheritdoc/>
         public TileGeometry GetGeometry(TileId id)
         {
             if (tileGeometryMap.TryGetValue(id, out var geometry))

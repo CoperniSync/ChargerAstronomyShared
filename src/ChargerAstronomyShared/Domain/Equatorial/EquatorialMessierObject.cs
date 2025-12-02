@@ -4,6 +4,10 @@ using System.Text;
 
 namespace ChargerAstronomyShared.Domain.Equatorial
 {
+
+    /// <summary>
+    /// A Messier Object represented in equatorial coordinates.
+    /// </summary>
     public sealed class EquatorialMessierObject : EquatorialCelestialBody
     {
         public EquatorialMessierObject() : base(BodyType.Star) { }
