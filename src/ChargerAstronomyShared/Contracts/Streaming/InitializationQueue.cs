@@ -5,6 +5,11 @@ using System.Text;
 
 namespace ChargerAstronomyShared.Contracts.Streaming
 {
+
+    /// <summary>
+    /// A thread-safe blocking queue interface for managing a collection of items with blocking enqueue and dequeue operations.
+    /// </summary>
+    /// <typeparam name="T">The objects to be passed through the queue.</typeparam>
     public interface BlockingQueue<T>
     {
 

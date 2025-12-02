@@ -6,6 +6,9 @@ namespace ChargerAstronomyShared.Domain.Equatorial
 {
     //using ChargerAstronomyShared.Domain.Common;
 
+    /// <summary>
+    /// A graph representation of a constellation.
+    /// </summary>
     public sealed class Constellation
     {
         /// <summary>

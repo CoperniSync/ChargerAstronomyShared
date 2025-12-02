@@ -1,5 +1,9 @@
 ﻿namespace ChargerAstronomyShared.Contracts.Streaming
 {
+
+    /// <summary>
+    /// Engine statistics.
+    /// </summary>
     public class EngineStats
     {
         public int TotalTiles { get; set; }

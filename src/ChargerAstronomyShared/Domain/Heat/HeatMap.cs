@@ -5,6 +5,10 @@ using ChargerAstronomyShared.Contracts.Models;
 
 namespace ChargerAstronomyShared.Domain.Heat
 {
+
+    /// <summary>
+    /// A map of heat values within a tile index.
+    /// </summary>
     public sealed class HeatMap
     {
         private readonly HeatConfig config;
@@ -15,8 +19,19 @@ namespace ChargerAstronomyShared.Domain.Heat
             config = cfg ?? throw new ArgumentNullException(nameof(cfg));
         }
 
+
+        /// <summary>
+        /// Gets the heat value for a specific tile.
+        /// </summary>
+        /// <param name="id">The ID of the specific tile.</param>
+        /// <returns>A float value representing heat.</returns>
         public float Get(in TileId id) => heatMap.TryGetValue(id, out var x) ? x : 0f;
 
+        /// <summary>
+        /// Gets the heat values for multiple tiles.
+        /// </summary>
+        /// <param name="ids">The list of tile IDs.</param>
+        /// <returns>A list of floating values represeting heat.</returns>
         public Dictionary<TileId, float> GetMany(IEnumerable<TileId> ids)
         {
             var result = new Dictionary<TileId, float>();
@@ -27,22 +42,41 @@ namespace ChargerAstronomyShared.Domain.Heat
             return result;
         }
 
+        /// <summary>
+        /// Sets the heat value for a specific tile.
+        /// </summary>
+        /// <param name="id">The ID of the desired tile.</param>
+        /// <param name="value">The desired heat value.</param>
         public void Set(in TileId id, float value)
         {
             var v = Math.Clamp(value, config.ClampMin, config.ClampMax);
             heatMap[id] = v;
         }
 
+        /// <summary>
+        /// Sets the heat value for multiple tiles.
+        /// </summary>
+        /// <param name="ids">The IDs of the desired tiles.</param>
+        /// <param name="value"></param>
         public void Set(IEnumerable<TileId> ids, float value)
         {
             foreach (var id in ids) Set(id, value);
         }
 
+        /// <summary>
+        /// Applies a delta to the heat value of a specific tile to increment or decrement it.
+        /// </summary>
+        /// <param name="id">The ID of the desired tile</param>
+        /// <param name="delta">The value to increase/decrease heat by.</param>
         public void Apply(in TileId id, float delta)
         {
             Set(id, Get(id) + delta);
         }
 
+        /// <summary>
+        /// Applies deltas to multiple tiles.
+        /// </summary>
+        /// <param name="deltas">The value to increase/decrease heat by.</param>
         public void Apply(IEnumerable<(TileId id, float delta)> deltas)
         {
             foreach (var (id, d) in deltas) Apply(id, d);
