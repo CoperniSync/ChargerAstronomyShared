@@ -23,7 +23,7 @@ namespace ChargerAstronomyShared.Domain.Heat
         public float ClampMin { get; set; } = 0f;
 
         /// <summary>
-        //
+        /// Indicates whether instant decay is applied.
         /// </summary>
         public Boolean UseInstantDecay { get; set; } = true;
 
